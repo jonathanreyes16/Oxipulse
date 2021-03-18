@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.oxipulse" >
+    package="com.example.oxipulse">
 
     <application
         android:allowBackup="true"
@@ -8,18 +8,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Oxipulse" >
+        android:theme="@style/Theme.Oxipulse">
+        <activity android:name=".StartActivity"></activity>
         <activity
             android:name=".histpas"
-            android:label="@string/title_activity_histpas" >
-        </activity>
+            android:label="@string/title_activity_histpas"></activity>
         <activity
             android:name=".hispass"
-            android:label="@string/title_activity_hispass" >
-        </activity>
+            android:label="@string/title_activity_hispass"></activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

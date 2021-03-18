@@ -7,17 +7,17 @@
         android:title="Perfil" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_person"
+        android:id="@+id/navigation_history"
+        android:icon="@drawable/ic_historial"
         android:title="Historial" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:id="@+id/navigation_Check"
+        android:icon="@drawable/ic_cardio"
         android:title="Evaluación" />
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:id="@+id/navigation_exit"
+        android:icon="@drawable/ic_logout"
         android:title="Salir" />
 
 </menu>
