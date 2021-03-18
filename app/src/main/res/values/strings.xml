@@ -3,4 +3,12 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="email">Correo Electronico</string>
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="health_personel">Soy Personal de Salud</string>
+    <string name="accept_legal_notice">He leido, y entiendo y acepto el Aviso legal de Oxipulse</string>
+    <string name="Register">Registrarse</string>
 </resources>
