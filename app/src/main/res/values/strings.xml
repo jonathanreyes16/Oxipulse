@@ -5,4 +5,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_hispass">MainActivity</string>
     <string name="title_activity_histpas">MainActivity</string>
+    <string name="todo">TODO</string>
+    <string name="registrate">registrate</string>
+    <string name="ingresar">ingresar</string>
 </resources>

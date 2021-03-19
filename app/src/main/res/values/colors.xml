@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="f_claro">#CCF2F4</color>
     <color name="f_fuerte">#A4EBF3</color>
+    <color name="fsclaro">#F4F9F9</color>
     <color name="grey">#666666</color>
 </resources>
