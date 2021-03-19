@@ -10,7 +10,7 @@
         android:id="@+id/bingresar"
         android:layout_width="140dp"
         android:layout_height="50dp"
-        android:background="@drawable/bordes_redondos"
+        android:background="@drawable/bordes_redob"
         android:text="@string/ingresar"
         android:textColor="@color/black"
 
