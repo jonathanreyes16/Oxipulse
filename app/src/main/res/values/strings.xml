@@ -18,5 +18,6 @@
     <string name="invalid_username">Usuario no valido</string>
     <string name="invalid_password">La contraseña debe contener al menos 5 caracteres</string>
     <string name="login_failed">"El email o contraseña introducidos no son correctos."</string>
+    <string name="pforget">Olvide mi contraseña</string>
 
 </resources>
