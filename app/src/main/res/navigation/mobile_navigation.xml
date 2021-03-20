@@ -12,14 +12,19 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_history"
         android:name="com.example.oxipulse.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="@string/historyr"
+        tools:layout="@layout/fragment_history" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_check"
         android:name="com.example.oxipulse.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_check" />
+    <activity
+        android:id="@+id/startActivity"
+        android:name="com.example.oxipulse.StartActivity"
+        android:label="activity_start"
+        tools:layout="@layout/activity_start" />
 </navigation>

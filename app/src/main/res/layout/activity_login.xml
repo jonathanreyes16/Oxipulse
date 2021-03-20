@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.loginActivity">
+
+    <EditText
+        android:id="@+id/lemail"
+        android:layout_width="300dp"
+        android:layout_height="44dp"
+        android:autofillHints=""
+        android:drawableEnd="@drawable/ic_correo"
+        android:drawableRight="@drawable/ic_correo"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:isScrollContainer="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.182"
+        android:Hint="@string"
+        />
+
+
+    <EditText
+        android:id="@+id/lPassword"
+        android:layout_width="300dp"
+        android:layout_height="44dp"
+        android:autofillHints=""
+        android:drawableEnd="@drawable/ic_password_1"
+        android:drawableRight="@drawable/ic_password_1"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/password"
+        app:itemIconTint="@drawable/textselec"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lemail"
+        app:layout_constraintVertical_bias="0.227"
+
+        />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="229dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bordes_redondos"
+        android:text="@string/ingresar"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lPassword"
+        app:layout_constraintVertical_bias="0.409" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,17 @@
     <string name="title_activity_hispass">MainActivity</string>
     <string name="title_activity_histpas">MainActivity</string>
     <string name="todo">TODO</string>
-    <string name="registrate">registrate</string>
-    <string name="ingresar">ingresar</string>
+    <string name="registrate">Registrate</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="historyr">Historial</string>
+    <string name="check">Validar</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="action_sign_in">Ingresar</string>
+    <string name="welcome">"Bienvenido"</string>
+    <string name="invalid_username">Usuario no valido</string>
+    <string name="invalid_password">La contraseña debe contener al menos 5 caracteres</string>
+    <string name="login_failed">"El email o contraseña introducidos no son correctos."</string>
+
 </resources>

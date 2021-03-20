@@ -12,7 +12,7 @@
         android:title="Historial" />
 
     <item
-        android:id="@+id/navigation_Check"
+        android:id="@+id/navigation_check"
         android:icon="@drawable/ic_cardio"
         android:title="Evaluación" />
     <item
