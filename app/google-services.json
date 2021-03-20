@@ -1,13 +1,14 @@
 {
   "project_info": {
     "project_number": "40079098092",
+    "firebase_url": "https://oxipulse-3be8e-default-rtdb.firebaseio.com",
     "project_id": "oxipulse-3be8e",
     "storage_bucket": "oxipulse-3be8e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:40079098092:android:0e748c53dad91d655ce5c9",
+        "mobilesdk_app_id": "1:40079098092:android:3b3f564e8b58ceb35ce5c9",
         "android_client_info": {
           "package_name": "com.example.oxipulse"
         }

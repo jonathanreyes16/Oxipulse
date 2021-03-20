@@ -5,7 +5,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="email">Correo Electronico</string>
     <string name="first_name">Nombre</string>
-    <string name="last_name">Apellido</string>
+    <string name="last_name">Apellido Paterno</string>
+    <string name="middle_name">Apellido Materno</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="health_personel">Soy Personal de Salud</string>
