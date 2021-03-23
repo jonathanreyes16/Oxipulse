@@ -110,9 +110,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                         databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()){
-                                Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                //Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+                                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //startActivity(intent);
+                                Toast.makeText(this, "Usuario creado con exito", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         });
