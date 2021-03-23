@@ -9,6 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oxipulse">
+        <activity android:name=".ui.loginActivity"></activity>
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity android:name=".StartActivity" />
+        <activity
+            android:name=".histpas"
+            android:label="@string/title_activity_histpas" />
+        <activity
+            android:name=".hispass"
+            android:label="@string/title_activity_hispass" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -18,6 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
