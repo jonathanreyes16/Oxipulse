@@ -11,7 +11,6 @@
     <string name="historyr">Historial</string>
     <string name="check">Validar</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="action_sign_in">Ingresar</string>
     <string name="welcome">"Bienvenido"</string>
@@ -19,5 +18,12 @@
     <string name="invalid_password">La contraseña debe contener al menos 5 caracteres</string>
     <string name="login_failed">"El email o contraseña introducidos no son correctos."</string>
     <string name="pforget">Olvide mi contraseña</string>
-
+    <string name="email">Correo Electronico</string>
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellido Paterno</string>
+    <string name="middle_name">Apellido Materno</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="health_personel">Soy Personal de Salud</string>
+    <string name="accept_legal_notice">He leido, y entiendo y acepto el Aviso legal de Oxipulse</string>
+    <string name="Register">Registrarse</string>
 </resources>
