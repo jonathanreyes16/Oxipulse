@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             String password= Objects.requireNonNull(txt_password.getText()).toString();
             String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString();
 
-            String isd = String.valueOf(chk_legal_notice.isChecked());
+            String isd = String.valueOf(chk_health_person.isChecked());
 
             if (TextUtils.isEmpty(firstname) || TextUtils.isEmpty(lastname) || TextUtils.isEmpty(middlename) ||
             TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmpass)||
@@ -83,7 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
             }else if(!chk_legal_notice.isChecked()){
                 Toast.makeText(RegisterActivity.this, "You should accept the legal notice to use this app", Toast.LENGTH_SHORT).show();
             }else {
-
                 register(firstname,lastname,middlename,email,password,isd);
             }
         });

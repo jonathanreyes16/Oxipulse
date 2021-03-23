@@ -12,10 +12,11 @@
         android:id="@+id/linear_data"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:paddingTop="15dp"
+        android:layout_weight="6"
         android:gravity="center"
-        android:layout_weight="5">
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="5dp">
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -23,64 +24,79 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress|textEmailAddress" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/first_name"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/last_name"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_lastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_middleName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/middle_name"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_middle_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_password"
@@ -88,13 +104,16 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_confirmPass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/confirm_password"
-            android:padding="15dp"
-            >
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_confirmPass"
@@ -103,6 +122,28 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/chk_health_person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center|center_horizontal"
+
+            android:padding="10dp"
+            android:text="@string/health_personel" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/chk_legal_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal"
+            android:padding="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/accept_legal_notice" />
+
 
     </LinearLayout>
 
@@ -110,26 +151,16 @@
         android:id="@+id/linear_accept"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:layout_weight="1"
         android:gravity="center"
-        android:layout_weight="2">
+        android:orientation="vertical">
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/chk_health_person"
-            android:layout_width="wrap_content"
-            android:text="@string/health_personel"
-            android:layout_height="wrap_content"
-            android:padding="8dp"/>
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/chk_legal_notice"
-            android:layout_width="wrap_content"
-            android:text="@string/accept_legal_notice"
-            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/button_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Register"/>
+            android:layout_margin="20dp"
+            android:text="@string/Register" />
 
     </LinearLayout>
 
