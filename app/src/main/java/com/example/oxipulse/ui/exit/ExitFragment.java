@@ -2,6 +2,7 @@ package com.example.oxipulse.ui.exit;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.oxipulse.MainActivity;
 import com.example.oxipulse.R;
+import com.example.oxipulse.StartActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ExitFragment extends Fragment {
 
@@ -22,14 +26,26 @@ public class ExitFragment extends Fragment {
     public static ExitFragment newInstance() {
         return new ExitFragment();
     }
-
+    private Button btn_logout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.exit_fragment, container, false);
 
+        View v = inflater.inflate(R.layout.exit_fragment, container, false);
+        btn_logout=v.findViewById(R.id.btn_signout);
 
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.signOut();
+                Intent intent = new Intent(getActivity(),StartActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
+        return v;
     }
 
     /*
