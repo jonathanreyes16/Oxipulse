@@ -7,7 +7,7 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/lemail"
+        android:id="@+id/itext_email_login"
         android:layout_width="300dp"
         android:layout_height="44dp"
         android:autofillHints=""
@@ -28,7 +28,7 @@
 
 
     <EditText
-        android:id="@+id/lPassword"
+        android:id="@+id/itext_pass_login"
         android:layout_width="300dp"
         android:layout_height="44dp"
         android:autofillHints=""
@@ -42,13 +42,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lemail"
+        app:layout_constraintTop_toBottomOf="@+id/itext_email_login"
         app:layout_constraintVertical_bias="0.227"
 
         />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_ingresar"
         android:layout_width="229dp"
         android:layout_height="56dp"
         android:background="@drawable/bordes_redondos"
@@ -58,11 +58,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lPassword"
+        app:layout_constraintTop_toBottomOf="@+id/itext_pass_login"
         app:layout_constraintVertical_bias="0.409" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/lbl_forgot_pass"
         android:layout_width="145dp"
         android:layout_height="22dp"
         android:linksClickable="true"
@@ -72,6 +72,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.89"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lPassword"
+        app:layout_constraintTop_toBottomOf="@+id/itext_pass_login"
         app:layout_constraintVertical_bias="0.023" />
 </androidx.constraintlayout.widget.ConstraintLayout>

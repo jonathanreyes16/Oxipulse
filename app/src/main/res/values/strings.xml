@@ -26,4 +26,6 @@
     <string name="health_personel">Soy Personal de Salud</string>
     <string name="accept_legal_notice">He leido, y entiendo y acepto el Aviso legal de Oxipulse</string>
     <string name="Register">Registrarse</string>
+    <string name="signout">Cerrar Sesion</string>
+    <string name="ask_signout">Seguro que quiere Cerrar Sesion?</string>
 </resources>
