@@ -22,6 +22,13 @@
         android:name="com.example.oxipulse.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_check" />
+    <fragment
+        android:id="@+id/navigation_exit"
+        android:name="com.example.oxipulse.ui.exit.ExitFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/exit_fragment" />
+
+
     <activity
         android:id="@+id/startActivity"
         android:name="com.example.oxipulse.StartActivity"
