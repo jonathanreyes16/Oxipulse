@@ -27,6 +27,7 @@ public class ExitFragment extends Fragment {
         return new ExitFragment();
     }
     private Button btn_logout;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.example.oxipulse.ui.dashboard;
+package com.example.oxipulse.ui.Records;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,22 +14,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.oxipulse.R;
 
-public class DashboardFragment extends Fragment {
+public class RecordsFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+    private RecordsViewModel dashboardViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_history, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
+                new ViewModelProvider(this).get(RecordsViewModel.class);
+        View v = inflater.inflate(R.layout.fragment_history, container, false);
+        final TextView textView = v.findViewById(R.id.text_dashboard);
+
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
-        return root;
+        return v;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.oxipulse.ui.notifications;
+package com.example.oxipulse.ui.Evaluation;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,14 +14,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.oxipulse.R;
 
-public class NotificationsFragment extends Fragment {
+public class EvaluationFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private EvaluationViewModel notificationsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+                new ViewModelProvider(this).get(EvaluationViewModel.class);
         View root = inflater.inflate(R.layout.fragment_check, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
