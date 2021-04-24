@@ -1,6 +1,4 @@
-package com.example.oxipulse.ui.exit;
-
-import androidx.lifecycle.ViewModelProvider;
+package com.example.oxipulse.ui.Exit;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.oxipulse.MainActivity;
 import com.example.oxipulse.R;
 import com.example.oxipulse.StartActivity;
 import com.google.firebase.auth.FirebaseAuth;

@@ -22,8 +22,8 @@ public class RecordsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(RecordsViewModel.class);
-        View v = inflater.inflate(R.layout.fragment_history, container, false);
-        final TextView textView = v.findViewById(R.id.text_dashboard);
+        View v = inflater.inflate(R.layout.fragment_records, container, false);
+        /*final TextView textView = v.findViewById(R.id.text_home);
 
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -31,6 +31,8 @@ public class RecordsFragment extends Fragment {
                 textView.setText(s);
             }
         });
+        */
+
         return v;
     }
 }

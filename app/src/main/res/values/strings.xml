@@ -28,4 +28,5 @@
     <string name="Register">Registrarse</string>
     <string name="signout">Cerrar Sesion</string>
     <string name="ask_signout">Seguro que quiere Cerrar Sesion?</string>
+    <string name="nombre">Nombre(s)</string>
 </resources>
