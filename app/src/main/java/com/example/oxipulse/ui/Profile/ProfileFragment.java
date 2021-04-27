@@ -22,7 +22,7 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_profile, container, false);
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
         /*final TextView textView = root.findViewById(R.id.text_home);
@@ -34,6 +34,6 @@ public class ProfileFragment extends Fragment {
         });
 
          */
-        return root;
+        return v;
     }
 }

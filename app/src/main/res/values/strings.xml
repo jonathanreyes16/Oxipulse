@@ -29,4 +29,18 @@
     <string name="signout">Cerrar Sesion</string>
     <string name="ask_signout">Seguro que quiere Cerrar Sesion?</string>
     <string name="nombre">Nombre(s)</string>
+    <string name="apellido_paterno">Apellido Paterno</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="peso">Peso</string>
+    <string name="estatura">Estatura</string>
+    <string name="sexo">Sexo</string>
+    <string name="asma">Asma</string>
+    <string name="hipertension">Hipertension</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="apellido_materno">Apellido Materno</string>
+    <string name="_31_10_1994">31/10/1994</string>
+    <string-array name="Sexos">
+        <item>Hombre</item>
+        <item>Mujer</item>
+    </string-array>
 </resources>
