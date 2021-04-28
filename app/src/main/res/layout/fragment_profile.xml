@@ -100,46 +100,59 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_last_n2" />
 
     <EditText
-        android:id="@+id/et_name3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
-        app:layout_constraintStart_toStartOf="@+id/lbl_birthdate"
-        tools:visibility="visible"
-        android:autofillHints="" />
-
-    <EditText
         android:id="@+id/et_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
+        android:enabled="false"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_name"
         app:layout_constraintStart_toEndOf="@+id/tv_name"
         app:layout_constraintStart_toStartOf="@+id/et_name2"
-        tools:visibility="visible"
-        android:autofillHints="" />
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/et_name2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:enabled="false"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n2"
         app:layout_constraintStart_toStartOf="@+id/et_name3"
         tools:visibility="visible" />
 
     <EditText
+        android:id="@+id/et_name3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
+        app:layout_constraintStart_toStartOf="@+id/lbl_birthdate"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/lbl_birthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:enabled="false"
+        android:text="@string/_31_10_1994"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
+        app:layout_constraintStart_toStartOf="@+id/np_height" />
+
+    <EditText
         android:id="@+id/np_weight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_height"
-        app:layout_constraintStart_toEndOf="@+id/tv_height"
-        app:layout_constraintStart_toStartOf="@+id/s_sexo"
+        android:enabled="false"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
+        app:layout_constraintStart_toStartOf="@+id/np_height"
         tools:visibility="visible" />
 
     <EditText
@@ -147,14 +160,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/np_weight"
+        android:enabled="false"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_height"
+        app:layout_constraintStart_toEndOf="@+id/tv_weight"
+        app:layout_constraintStart_toStartOf="@+id/s_sexo"
         tools:visibility="visible" />
 
     <Spinner
         android:id="@+id/s_sexo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="122dp"
+        android:layout_height="44dp"
 
         android:entries="@array/Sexos"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_sex"
@@ -165,6 +180,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:textSize="10sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_asma"
         app:layout_constraintStart_toStartOf="@+id/checkBox3"
@@ -174,6 +190,7 @@
         android:id="@+id/checkBox3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_diabetes"
         app:layout_constraintStart_toStartOf="@+id/checkBox2"
         tools:visibility="visible" />
@@ -182,21 +199,12 @@
         android:id="@+id/checkBox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_hipertension"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.262"
         app:layout_constraintStart_toEndOf="@+id/tv_hipertension"
         tools:visibility="visible" />
-
-    <EditText
-        android:id="@+id/lbl_birthdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="@string/_31_10_1994"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
-        app:layout_constraintStart_toStartOf="@+id/np_height"
-        android:autofillHints="" />
 
     <ImageView
         android:id="@+id/imageView2"
