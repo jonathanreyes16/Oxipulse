@@ -1,8 +1,14 @@
 package com.example.oxipulse.ui.Records;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.oxipulse.classes.FirebaseQueryLiveData;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RecordsViewModel extends ViewModel {
 
@@ -17,3 +23,21 @@ public class RecordsViewModel extends ViewModel {
         return mText;
     }
 }
+
+    //private MutableLiveData<String> mText;
+    ////referencia a la base de datos, Users(usuarios)
+    //private static final DatabaseReference PROFILE_REF =
+    //        FirebaseDatabase.getInstance().getReference("/Users");
+    ////declaracion de variables
+    //private String First_Name, id, imageUrl,LastName,isDoc,MiddleName;
+    //private String birthdate,weight,sex,diabetes,asma,hipertension ;
+//
+    ////se declara la variable liveData, es un query hacia la base de datos, Users
+    //private final FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(PROFILE_REF);
+//
+    ////get que retorna el livedata, esta seria el resultado del query
+    //@NonNull
+    //public LiveData<DataSnapshot> getDataSnapshotLiveData() {
+    //    return liveData;
+    //}
+

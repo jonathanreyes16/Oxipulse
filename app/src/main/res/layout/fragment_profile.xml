@@ -17,6 +17,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <TextView
+        android:id="@+id/tv_last_n1"
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:text="@string/apellido_materno"
+        app:layout_constraintBottom_toTopOf="@+id/tv_birthdate"
+        app:layout_constraintStart_toStartOf="@+id/tv_birthdate"
+        app:layout_constraintTop_toBottomOf="@+id/tv_last_n2" />
+
+    <TextView
         android:id="@+id/tv_last_n2"
         android:layout_width="0dp"
         android:layout_height="18dp"
@@ -90,15 +99,6 @@
         app:layout_constraintStart_toStartOf="@+id/tv_hipertension"
         app:layout_constraintTop_toBottomOf="@+id/tv_asma" />
 
-    <TextView
-        android:id="@+id/tv_last_n1"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/apellido_materno"
-        app:layout_constraintBottom_toTopOf="@+id/tv_birthdate"
-        app:layout_constraintStart_toStartOf="@+id/tv_birthdate"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_n2" />
-
     <EditText
         android:id="@+id/et_name"
         android:layout_width="wrap_content"
@@ -132,11 +132,11 @@
         android:enabled="false"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
-        app:layout_constraintStart_toStartOf="@+id/lbl_birthdate"
+        app:layout_constraintStart_toStartOf="@+id/s_birthdate"
         tools:visibility="visible" />
 
     <EditText
-        android:id="@+id/lbl_birthdate"
+        android:id="@+id/s_birthdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints=""
@@ -173,30 +173,30 @@
 
         android:entries="@array/Sexos"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_sex"
-        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintStart_toStartOf="@+id/chk_asthma"
         tools:visibility="visible" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/chk_asthma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:textSize="10sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_asma"
-        app:layout_constraintStart_toStartOf="@+id/checkBox3"
+        app:layout_constraintStart_toStartOf="@+id/chk_diabetes"
         tools:visibility="visible" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/chk_diabetes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_diabetes"
-        app:layout_constraintStart_toStartOf="@+id/checkBox2"
+        app:layout_constraintStart_toStartOf="@+id/chk_hypertension"
         tools:visibility="visible" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/chk_hypertension"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
