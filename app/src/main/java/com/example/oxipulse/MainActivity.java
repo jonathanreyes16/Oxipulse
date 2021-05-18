@@ -23,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //main activity contiene el navview, que es el menu de navegacion,
+        //en cada opcion de menu se abre un fragment diferente,
+        //que es cada pantalla en cada opcion
+
+        //declaracion y inflacion de widget
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

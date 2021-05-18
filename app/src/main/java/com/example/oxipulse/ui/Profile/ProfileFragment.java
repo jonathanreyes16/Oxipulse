@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,15 +39,15 @@ public class ProfileFragment extends Fragment {
 
     // declaracion de variables
     ProfileViewModel profileViewModel;
-
     //declaracion de variables
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
-    Spinner tGender;
+    Spinner tGender,tWeight_int,tWeight_dec,tHeight_int,tHeight_dec;
     CheckBox tAsthma,tDiabetes,tHypertension;
     String uid,isdoc,imageUrl;
     ImageView profilePic;
     Boolean op;
     DatabaseReference database;
+    patient temp;
     Button Edit, btn_accept,btn_cancel;
     private static final String BARRA = "/";
 
@@ -66,7 +67,10 @@ public class ProfileFragment extends Fragment {
         tLast1=v.findViewById(R.id.et_name2);
         tLast2=v.findViewById(R.id.et_name3);
         tBirthdate=v.findViewById(R.id.s_birthdate);
-        tWeight=v.findViewById(R.id.np_weight);
+        tWeight_int=v.findViewById(R.id.s_weight_int);
+        tWeight_dec=v.findViewById(R.id.s_weight_dec);
+
+
         tHeight=v.findViewById(R.id.np_height);
         tGender=v.findViewById(R.id.s_gender);
         tAsthma=v.findViewById(R.id.chk_asthma);
@@ -184,10 +188,7 @@ public class ProfileFragment extends Fragment {
                 else {
                     Toast.makeText(getContext(), "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
                 }
-                btn_accept.setVisibility(View.INVISIBLE);
-                btn_cancel.setVisibility(View.INVISIBLE);
-                setAllDisabled();
-                Edit.setEnabled(true);
+                disableEdit();
             }
         });
         //evento del boton cancel
@@ -195,10 +196,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //si se cancela se regresan los valores y se pone invisibles los botones
-                Edit.setEnabled(true);
-                setAllDisabled();
-                btn_accept.setVisibility(View.INVISIBLE);
-                btn_cancel.setVisibility(View.INVISIBLE);
+                disableEdit();
+                
+                //getTemp();
             }
         });
 
@@ -213,7 +213,6 @@ public class ProfileFragment extends Fragment {
 
         });
          */
-
         /*final TextView textView = root.findViewById(R.id.text_home);
         profileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -230,6 +229,13 @@ public class ProfileFragment extends Fragment {
     }
     //metodo para que cambie la vista dependiendo si es paciente o no
     private void PatientView(){
+    }
+
+    private void disableEdit(){
+        Edit.setEnabled(true);
+        setAllDisabled();
+        btn_accept.setVisibility(View.INVISIBLE);
+        btn_cancel.setVisibility(View.INVISIBLE);
     }
     //evento para habilitar la interfaz
     private void setAllEnabled(){
@@ -260,8 +266,8 @@ public class ProfileFragment extends Fragment {
         op=false;
     }
     //metodo almacena los valores de los textos para al cancelar regresarlos a como estaban
-    private void storeTemp(){
-        patient temp = new patient();
+    private void setTemp(){
+        temp = new patient();
         temp.setFirstName(tName.getText().toString());
         temp.setLastName(tLast1.getText().toString());
         temp.setMiddleName(tLast2.getText().toString());
@@ -272,6 +278,22 @@ public class ProfileFragment extends Fragment {
         temp.setAsma(tAsthma.toString());
         temp.setDiabetes(tDiabetes.toString());
         temp.setHipertension(tHypertension.toString());
+    }
+    private patient getTemp(patient temp){
+        tName.setText(temp.getFirstName());
+        tLast1.setText(temp.getLastName());
+        tLast2.setText(temp.getMiddleName());
+        tBirthdate.setText(temp.getBirthdate());
+        tWeight.setText(temp.getWeight());
+        tHeight.setText(temp.getHeight());
+        if (temp.getGender().equals("Hombre")){
+            tGender.setSelection(0);
+        }
+        else {tGender.setSelection(1);}
+        tAsthma.setChecked(Boolean.parseBoolean(temp.getAsma()));
+        tDiabetes.setChecked(Boolean.parseBoolean(temp.getDiabetes()));
+        tHypertension.setChecked(Boolean.parseBoolean(temp.getHipertension()));
+        return temp;
     }
 
 }

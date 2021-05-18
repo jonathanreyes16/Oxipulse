@@ -142,17 +142,7 @@
         android:autofillHints=""
         android:inputType="date"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
-        app:layout_constraintStart_toStartOf="@+id/np_height" />
-
-    <EditText
-        android:id="@+id/np_weight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/np_height"
-        tools:visibility="visible" />
+        app:layout_constraintStart_toStartOf="@+id/s_weight_int" />
 
     <EditText
         android:id="@+id/np_height"
@@ -270,5 +260,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/s_weight_int"
+        android:layout_width="76dp"
+        android:layout_height="45dp"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="@+id/np_height"
+        app:layout_constraintTop_toBottomOf="@+id/s_birthdate" />
+
+    <Spinner
+        android:id="@+id/s_weight_dec"
+        android:layout_width="76dp"
+        android:layout_height="45dp"
+        android:background="@null"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/s_birthdate" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="."
+        app:layout_constraintBottom_toTopOf="@+id/np_height"
+        app:layout_constraintStart_toEndOf="@+id/s_weight_int"
+        app:layout_constraintTop_toBottomOf="@+id/s_birthdate"
+        app:layout_constraintVertical_bias="0.69" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

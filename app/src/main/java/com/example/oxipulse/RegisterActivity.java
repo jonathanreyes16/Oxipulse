@@ -29,7 +29,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-
+    //declaracion de variables
     TextInputEditText txt_email;
     TextInputEditText txt_first_name;
     TextInputEditText txt_last_name;
@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
+        //inflar widgets
         txt_email=findViewById(R.id.text_input_email);
         txt_first_name = findViewById(R.id.text_input_name);
         txt_last_name= findViewById(R.id.text_input_lastName);
@@ -57,11 +57,11 @@ public class RegisterActivity extends AppCompatActivity {
         chk_health_person=findViewById(R.id.chk_health_person);
         chk_legal_notice=findViewById(R.id.chk_legal_notice);
 
-
         btn_register=findViewById(R.id.button_register);
 
         auth=FirebaseAuth.getInstance();
 
+        //evento del boton registro
         btn_register.setOnClickListener(v -> {
             String email= Objects.requireNonNull(txt_email.getText()).toString();
             String firstname= Objects.requireNonNull(txt_first_name.getText()).toString();
@@ -71,19 +71,23 @@ public class RegisterActivity extends AppCompatActivity {
             String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString();
 
             String isd = String.valueOf(chk_health_person.isChecked());
-
+            //si
             if (TextUtils.isEmpty(firstname) || TextUtils.isEmpty(lastname) || TextUtils.isEmpty(middlename) ||
             TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmpass)||
             !chk_legal_notice.isChecked() )
-            {
+            {//alguno esta vacio monstra un toast que diga "todos los campos son requeridos"
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
             }else if (password.length()<6){
+                //despues, el password debe ser mayor a 6
                 Toast.makeText(RegisterActivity.this, "Password Length Is < 6!", Toast.LENGTH_SHORT).show();
             }else if (!password.equals(confirmpass)){
+                //verifica que los passwords sean iguales
                 Toast.makeText(RegisterActivity.this, "Passwords are different", Toast.LENGTH_SHORT).show();
             }else if(!chk_legal_notice.isChecked()){
+                //deben aceptarse los terminos y condiciones
                 Toast.makeText(RegisterActivity.this, "You should accept the legal notice to use this app", Toast.LENGTH_SHORT).show();
             }else {
+                //si todo lo anterior es correcto se crea un usuario
                 register(firstname,lastname,middlename,email,password,isd);
             }
         });
