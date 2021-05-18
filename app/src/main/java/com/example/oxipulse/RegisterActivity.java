@@ -29,6 +29,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
+
     TextInputEditText txt_email;
     TextInputEditText txt_first_name;
     TextInputEditText txt_last_name;
@@ -104,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                         hashMap.put("id",userid);
                         hashMap.put("firstName",firstname);
                         hashMap.put("lastName",lastname);
-                        hashMap.put("middlename",middlename);
+                        hashMap.put("middleName",middlename);
                         hashMap.put("imageURL","default");
                         hashMap.put("isDoc",isdoc);
 

@@ -16,8 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 //separando la parte logica de la visual
 public class ProfileViewModel extends ViewModel {
 
-
-
     private MutableLiveData<String> mText;
     //referencia a la base de datos, Users(usuarios)
     private static final DatabaseReference MY_PROFILE_REF =

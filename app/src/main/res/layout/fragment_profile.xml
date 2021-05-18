@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="17dp"
         android:text="@string/nombre"
+
         app:layout_constraintBottom_toTopOf="@+id/tv_last_n2"
         app:layout_constraintStart_toStartOf="@+id/tv_last_n2"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
@@ -105,7 +106,6 @@
         android:layout_height="wrap_content"
         android:autofillHints=""
         android:ems="10"
-        android:enabled="false"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_name"
         app:layout_constraintStart_toEndOf="@+id/tv_name"
@@ -117,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:enabled="false"
+
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n2"
         app:layout_constraintStart_toStartOf="@+id/et_name3"
@@ -129,7 +129,7 @@
         android:layout_height="wrap_content"
         android:autofillHints=""
         android:ems="10"
-        android:enabled="false"
+
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
         app:layout_constraintStart_toStartOf="@+id/s_birthdate"
@@ -137,11 +137,10 @@
 
     <EditText
         android:id="@+id/s_birthdate"
-        android:layout_width="wrap_content"
+        android:layout_width="208dp"
         android:layout_height="wrap_content"
         android:autofillHints=""
-        android:enabled="false"
-        android:text="@string/_31_10_1994"
+        android:inputType="date"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
         app:layout_constraintStart_toStartOf="@+id/np_height" />
 
@@ -150,7 +149,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:enabled="false"
+
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
         app:layout_constraintStart_toStartOf="@+id/np_height"
         tools:visibility="visible" />
@@ -160,14 +159,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:enabled="false"
+
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_height"
         app:layout_constraintStart_toEndOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/s_sexo"
+        app:layout_constraintStart_toStartOf="@+id/s_gender"
         tools:visibility="visible" />
 
     <Spinner
-        android:id="@+id/s_sexo"
+        android:id="@+id/s_gender"
         android:layout_width="122dp"
         android:layout_height="44dp"
 
@@ -180,7 +179,7 @@
         android:id="@+id/chk_asthma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="false"
+
         android:textSize="10sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_asma"
         app:layout_constraintStart_toStartOf="@+id/chk_diabetes"
@@ -190,7 +189,7 @@
         android:id="@+id/chk_diabetes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="false"
+
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_diabetes"
         app:layout_constraintStart_toStartOf="@+id/chk_hypertension"
         tools:visibility="visible" />
@@ -199,7 +198,7 @@
         android:id="@+id/chk_hypertension"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="false"
+
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_hipertension"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.262"
@@ -207,7 +206,7 @@
         tools:visibility="visible" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imgProfilePic"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -239,14 +238,37 @@
 
     <Button
         android:id="@+id/btn_edit"
-        android:layout_width="45dp"
-        android:layout_height="37dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="4dp"
-        android:background="#FFFFFF"
-        app:icon="@drawable/edit"
+        android:background="@drawable/edit"
+        app:iconPadding="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.628"
-        app:layout_constraintStart_toEndOf="@+id/imageView2" />
+        app:layout_constraintStart_toEndOf="@+id/imgProfilePic" />
+
+    <Button
+        android:id="@+id/btn_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Aceptar"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.905"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.905"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

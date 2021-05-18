@@ -6,6 +6,15 @@ public class person {
     private String LastName;
     private String isDoc;
     private String ImageUrl;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return FirstName;

@@ -5,7 +5,7 @@ public class patient extends person {
     private String birthdate;
     private String weight;
     private String height;
-    private String sex;
+    private String gender;
     private String diabetes;
     private String asma;
     private String hipertension;
@@ -38,12 +38,12 @@ public class patient extends person {
         this.height = height;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getDiabetes() {
