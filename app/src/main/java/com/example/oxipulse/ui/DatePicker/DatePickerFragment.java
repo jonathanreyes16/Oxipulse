@@ -1,4 +1,4 @@
-package com.example.oxipulse.ui;
+package com.example.oxipulse.ui.DatePicker;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,8 +18,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DatePickerFragment extends DialogFragment {
 
+    private DatePickerDialog.OnDateSetListener listener;
+
+    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener){
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.setListener(listener);
+        return fragment;
+    }
+
+    private void setListener(DatePickerDialog.OnDateSetListener listener) {
+        this.listener=listener;
+    }
 
     @NotNull
     @Override
@@ -31,11 +42,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), this, year, month, day);
+        return new DatePickerDialog(getActivity(), listener, year, month, day);
     }
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.oxipulse.ui.Profile;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,21 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.oxipulse.R;
 import com.example.oxipulse.classes.patient;
-import com.example.oxipulse.ui.DatePickerFragment;
+import com.example.oxipulse.ui.DatePicker.DatePickerFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,10 +30,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.snapshot.Index;
 
+import java.util.Date;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class ProfileFragment extends Fragment {
 
@@ -41,7 +40,7 @@ public class ProfileFragment extends Fragment {
     ProfileViewModel profileViewModel;
     //declaracion de variables
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
-    Button btn_edit, btn_accept,btn_cancel;
+    Button btn_edit, btn_accept,btn_cancel,btn_calendar;
     Spinner tGender;
     //Spinner tWeight_int,tWeight_dec,tHeight_int,tHeight_dec;
     CheckBox tAsthma,tDiabetes,tHypertension;
@@ -76,6 +75,7 @@ public class ProfileFragment extends Fragment {
         btn_edit=v.findViewById(R.id.btn_edit);
         btn_accept=v.findViewById(R.id.btn_accept);
         btn_cancel=v.findViewById(R.id.btn_cancel);
+        btn_calendar=v.findViewById(R.id.btn_calendar);
         //objeto que se usa para almacenar datos
         temp= new patient();
         //metodo para desabilitar los textos
@@ -89,6 +89,7 @@ public class ProfileFragment extends Fragment {
 
             //path de la base de datos que usaremos
             Database= FirebaseDatabase.getInstance();
+
             // en este caso solo nos interesa el usuario actual, En User/uid, donde uid es el usuario actual
             ref = Database.getReference().child("Users").child(uid);
             //evento para leer los datos
@@ -170,7 +171,6 @@ public class ProfileFragment extends Fragment {
                     u.setImageUrl(imageUrl);
                     u.setIsDoc(isdoc);
                     u.setId(uid);
-                    //database.child("firstName").setValue(u.getFirstName());
                     //se envia a la base de datos el paciente generado para que se actualicen los datos
                     ref.setValue(u);
                     //se crea un mensage que dice que se guardo
@@ -187,23 +187,34 @@ public class ProfileFragment extends Fragment {
                 //si se cancela se regresan los valores y se pone invisibles los botones
                 disableEdit();
                 getTemp();
-                //getTemp();
+
             }
         });
 
-        /*
-        tBirthdate.setOnClickListener(new View.OnClickListener() {
+        //evento del boton calendar
+        btn_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getSupportFragmentManager(),"datePicker");
+            public void onClick(View v) {
+                //se crea un nuevo fragmento de tipo Datepicker
+                DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+                    //se sobrecarga su metodo de onDateSet
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        //la fecha seleccionada se asigna a la variable selectedDate
+                        String selectedDate=dayOfMonth+"/"+(month+1)+"/"+year;
+                        //Al TextView birthdate se le asigna el valor de la fecha seleccionada
+                        tBirthdate.setText(selectedDate);
+                    }
+                });
+                //se muestra el fragment
+                newFragment.show(getParentFragmentManager(),"datePicker");
             }
-
-
         });
-         */
+
         return v;
     }
+
+
     //metodo para que caambie la vista dependiendo si es doctor o no
     private void DoctorView(){
     }
@@ -216,12 +227,15 @@ public class ProfileFragment extends Fragment {
         btn_edit.setEnabled(false);
         setAllEnabled();
         btn_accept.setVisibility(View.VISIBLE);
+        btn_calendar.setVisibility(View.VISIBLE);
         btn_cancel.setVisibility(View.VISIBLE);
+
     }
     private void disableEdit(){
         btn_edit.setEnabled(true);
         setAllDisabled();
         btn_accept.setVisibility(View.INVISIBLE);
+        btn_calendar.setVisibility(View.INVISIBLE);
         btn_cancel.setVisibility(View.INVISIBLE);
     }
     //evento para habilitar la interfaz
@@ -229,7 +243,7 @@ public class ProfileFragment extends Fragment {
         tName.setEnabled(true);
         tLast1.setEnabled(true);
         tLast2.setEnabled(true);
-        tBirthdate.setEnabled(true);
+        //tBirthdate.setEnabled(true);
         tWeight.setEnabled(true);
         tHeight.setEnabled(true);
         tGender.setEnabled(true);
@@ -262,9 +276,9 @@ public class ProfileFragment extends Fragment {
         temp.setWeight(tWeight.getText().toString());
         temp.setHeight(tHeight.getText().toString());
         temp.setGender(tGender.getSelectedItem().toString());
-        temp.setAsma(tAsthma.toString());
-        temp.setDiabetes(tDiabetes.toString());
-        temp.setHipertension(tHypertension.toString());
+        temp.setAsma(String.valueOf(tAsthma.isChecked()));
+        temp.setDiabetes(String.valueOf(tDiabetes.isChecked()));
+        temp.setHipertension(String.valueOf(tHypertension.isChecked()));
     }
 
     private void getTemp(){

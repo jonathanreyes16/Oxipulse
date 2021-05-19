@@ -107,6 +107,7 @@
         android:autofillHints=""
         android:ems="10"
         android:inputType="textPersonName"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_name"
         app:layout_constraintStart_toEndOf="@+id/tv_name"
         app:layout_constraintStart_toStartOf="@+id/et_name2"
@@ -119,6 +120,7 @@
         android:ems="10"
 
         android:inputType="textPersonName"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n2"
         app:layout_constraintStart_toStartOf="@+id/et_name3"
         tools:visibility="visible" />
@@ -131,16 +133,18 @@
         android:ems="10"
 
         android:inputType="textPersonName"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
         app:layout_constraintStart_toStartOf="@+id/s_birthdate"
         tools:visibility="visible" />
 
     <EditText
         android:id="@+id/s_birthdate"
-        android:layout_width="208dp"
-        android:layout_height="wrap_content"
+        android:layout_width="129dp"
+        android:layout_height="0dp"
         android:autofillHints=""
-        android:inputType="date"
+        android:inputType="text"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
         app:layout_constraintStart_toStartOf="@+id/np_weight" />
 
@@ -151,6 +155,7 @@
         android:ems="10"
 
         android:inputType="numberDecimal"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_height"
         app:layout_constraintStart_toEndOf="@+id/tv_weight"
         app:layout_constraintStart_toStartOf="@+id/s_gender"
@@ -163,6 +168,7 @@
         android:ems="10"
 
         android:inputType="numberDecimal"
+        android:singleLine="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
         app:layout_constraintStart_toStartOf="@+id/np_height"
         tools:visibility="visible" />
@@ -272,5 +278,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_calendar"
+        android:layout_width="54dp"
+        android:layout_height="37dp"
+        android:visibility="invisible"
+        app:icon="@drawable/ic_baseline_calendar_today_24"
+        app:layout_constraintBaseline_toBaselineOf="@+id/s_birthdate"
+        app:layout_constraintEnd_toEndOf="@+id/et_name3"
+        app:layout_constraintHorizontal_bias="0.354"
+        app:layout_constraintStart_toEndOf="@+id/s_birthdate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
