@@ -41,21 +41,20 @@ public class ProfileFragment extends Fragment {
     ProfileViewModel profileViewModel;
     //declaracion de variables
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
-    Spinner tGender,tWeight_int,tWeight_dec,tHeight_int,tHeight_dec;
+    Button btn_edit, btn_accept,btn_cancel;
+    Spinner tGender;
+    //Spinner tWeight_int,tWeight_dec,tHeight_int,tHeight_dec;
     CheckBox tAsthma,tDiabetes,tHypertension;
     String uid,isdoc,imageUrl;
     ImageView profilePic;
-    Boolean op;
-    DatabaseReference database;
+    //Boolean op;
+    FirebaseDatabase Database;
+    DatabaseReference ref;
     patient temp;
-    Button Edit, btn_accept,btn_cancel;
     private static final String BARRA = "/";
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //user = FirebaseAuth.getInstance().getCurrentUser();
-
         //se instancia el viewmodel, y se le pasan los parametros del ProfileViewModel
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
@@ -67,20 +66,18 @@ public class ProfileFragment extends Fragment {
         tLast1=v.findViewById(R.id.et_name2);
         tLast2=v.findViewById(R.id.et_name3);
         tBirthdate=v.findViewById(R.id.s_birthdate);
-        tWeight_int=v.findViewById(R.id.s_weight_int);
-        tWeight_dec=v.findViewById(R.id.s_weight_dec);
-
-
+        tWeight=v.findViewById(R.id.np_weight);
         tHeight=v.findViewById(R.id.np_height);
         tGender=v.findViewById(R.id.s_gender);
         tAsthma=v.findViewById(R.id.chk_asthma);
         tDiabetes=v.findViewById(R.id.chk_diabetes);
         profilePic=v.findViewById(R.id.imgProfilePic);
         tHypertension=v.findViewById(R.id.chk_hypertension);
-        Edit=v.findViewById(R.id.btn_edit);
+        btn_edit=v.findViewById(R.id.btn_edit);
         btn_accept=v.findViewById(R.id.btn_accept);
         btn_cancel=v.findViewById(R.id.btn_cancel);
-
+        //objeto que se usa para almacenar datos
+        temp= new patient();
         //metodo para desabilitar los textos
         setAllDisabled();
         //se obtiene el usuario actual
@@ -90,10 +87,12 @@ public class ProfileFragment extends Fragment {
             //obtenemos el uid del usuario actual  para despues tener todos los datos buscando solo ese id
             uid=user.getUid();
 
-            //path de la base de datos que usaremos, en este caso solo nos interesa el usuario actual, En User/uid, donde uid es el usuario actual
-            database= FirebaseDatabase.getInstance().getReference();
-            //evento para leer de la base de datos
-            database.child("Users").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            //path de la base de datos que usaremos
+            Database= FirebaseDatabase.getInstance();
+            // en este caso solo nos interesa el usuario actual, En User/uid, donde uid es el usuario actual
+            ref = Database.getReference().child("Users").child(uid);
+            //evento para leer los datos
+            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     //si la tarea no es completada, no se puede obtener el snapshot de la base de datos se marca un error en el log
@@ -107,7 +106,6 @@ public class ProfileFragment extends Fragment {
                         //se le asignan los valores de paciente o doctor a la interfaz
                         isdoc=p.getIsDoc();
                         imageUrl=p.getImageUrl();
-
                         tName.setText(p.getFirstName());
                         tLast1.setText(p.getLastName());
                         tLast2.setText(p.getMiddleName());
@@ -135,20 +133,11 @@ public class ProfileFragment extends Fragment {
         }
 
         //evento del boton edit
-        Edit.setOnClickListener(new View.OnClickListener() {
+        btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //si es verdadero se deshabilitan
-                if (op){
-                    setAllDisabled();
-                }
-                //si es falso se habilitan
-                else {
-                    setAllEnabled();
-                    Edit.setEnabled(false);
-                    btn_accept.setVisibility(View.VISIBLE);
-                    btn_cancel.setVisibility(View.VISIBLE);
-                }
+                setTemp();
+                enableEdit();
             }
         });
 
@@ -160,9 +149,12 @@ public class ProfileFragment extends Fragment {
                 if ((TextUtils.isEmpty(tName.getText()))||(TextUtils.isEmpty(tLast1.getText())) ||
                         (TextUtils.isEmpty(tLast2.getText()))||(TextUtils.isEmpty(tBirthdate.getText()))||
                         (TextUtils.isEmpty(tWeight.getText()))||(TextUtils.isEmpty(tHeight.getText()))||
-                        (TextUtils.isEmpty(tGender.getSelectedItem().toString()))||(TextUtils.isEmpty(tHypertension.getText()))||
-                        (TextUtils.isEmpty(tDiabetes.getText()))||(TextUtils.isEmpty(tAsthma.getText()))){
+                        (TextUtils.isEmpty(tGender.getSelectedItem().toString()))){
 
+                    Toast.makeText(getContext(), "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
+                }
+                //si no estan vacios los campos, se creara un paciente, se le asignaran los datos y se enviara a la base de datos
+                else {
                     //se crea un paciente para asignarle los valores de los campos
                     patient u = new patient();
                     u.setFirstName(tName.getText().toString());
@@ -180,15 +172,12 @@ public class ProfileFragment extends Fragment {
                     u.setId(uid);
                     //database.child("firstName").setValue(u.getFirstName());
                     //se envia a la base de datos el paciente generado para que se actualicen los datos
-                    database.child("Users").child(uid).setValue(u);
+                    ref.setValue(u);
                     //se crea un mensage que dice que se guardo
                     Toast.makeText(getContext(), "Guardado", Toast.LENGTH_SHORT).show();
+                    disableEdit();
                 }
-                //si no estan vacios los campos, se le notificara que deben llenarlos
-                else {
-                    Toast.makeText(getContext(), "Debe llenar todos los campos", Toast.LENGTH_SHORT).show();
-                }
-                disableEdit();
+
             }
         });
         //evento del boton cancel
@@ -197,7 +186,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 //si se cancela se regresan los valores y se pone invisibles los botones
                 disableEdit();
-                
+                getTemp();
                 //getTemp();
             }
         });
@@ -213,15 +202,6 @@ public class ProfileFragment extends Fragment {
 
         });
          */
-        /*final TextView textView = root.findViewById(R.id.text_home);
-        profileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-
-         */
         return v;
     }
     //metodo para que caambie la vista dependiendo si es doctor o no
@@ -231,8 +211,15 @@ public class ProfileFragment extends Fragment {
     private void PatientView(){
     }
 
+
+    private void enableEdit(){
+        btn_edit.setEnabled(false);
+        setAllEnabled();
+        btn_accept.setVisibility(View.VISIBLE);
+        btn_cancel.setVisibility(View.VISIBLE);
+    }
     private void disableEdit(){
-        Edit.setEnabled(true);
+        btn_edit.setEnabled(true);
         setAllDisabled();
         btn_accept.setVisibility(View.INVISIBLE);
         btn_cancel.setVisibility(View.INVISIBLE);
@@ -249,7 +236,7 @@ public class ProfileFragment extends Fragment {
         tAsthma.setEnabled(true);
         tDiabetes.setEnabled(true);
         tHypertension.setEnabled(true);
-        op=true;
+        //op=true;
     }
     //evento para desabilitar la interfaz
     private void setAllDisabled(){
@@ -263,11 +250,11 @@ public class ProfileFragment extends Fragment {
         tAsthma.setEnabled(false);
         tDiabetes.setEnabled(false);
         tHypertension.setEnabled(false);
-        op=false;
+        //op=false;
     }
     //metodo almacena los valores de los textos para al cancelar regresarlos a como estaban
     private void setTemp(){
-        temp = new patient();
+       // temp = new patient();
         temp.setFirstName(tName.getText().toString());
         temp.setLastName(tLast1.getText().toString());
         temp.setMiddleName(tLast2.getText().toString());
@@ -279,7 +266,8 @@ public class ProfileFragment extends Fragment {
         temp.setDiabetes(tDiabetes.toString());
         temp.setHipertension(tHypertension.toString());
     }
-    private patient getTemp(patient temp){
+
+    private void getTemp(){
         tName.setText(temp.getFirstName());
         tLast1.setText(temp.getLastName());
         tLast2.setText(temp.getMiddleName());
@@ -293,7 +281,7 @@ public class ProfileFragment extends Fragment {
         tAsthma.setChecked(Boolean.parseBoolean(temp.getAsma()));
         tDiabetes.setChecked(Boolean.parseBoolean(temp.getDiabetes()));
         tHypertension.setChecked(Boolean.parseBoolean(temp.getHipertension()));
-        return temp;
+
     }
 
 }
