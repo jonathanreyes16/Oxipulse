@@ -1,6 +1,7 @@
 package com.example.oxipulse.ui.Evaluation;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.oxipulse.R;
+import com.example.oxipulse.classes.ApiAdapter;
+import com.example.oxipulse.classes.EvalResponse;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class EvaluationFragment extends Fragment {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class EvaluationFragment extends Fragment implements Callback<EvalResponse> {
 
     private EvaluationViewModel evaluationViewModel;
     //declaracion de variables
@@ -28,8 +35,32 @@ public class EvaluationFragment extends Fragment {
         evaluationViewModel =
                 new ViewModelProvider(this).get(EvaluationViewModel.class);
         View root = inflater.inflate(R.layout.fragment_evaluation, container, false);
-        
+        btn_eval= root.findViewById(R.id.button_evaluation);
+
+        btn_eval.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<EvalResponse> responseCall=ApiAdapter.getApiService().getEval();
+                responseCall.enqueue();
+            }
+        });
+
 
         return root;
+    }
+
+    @Override
+    public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+        if (response.isSuccessful()){
+            EvalResponse eval = response.body();
+            Log.d("call","size of "+eval.toString());
+        }
+
+    }
+
+    @Override
+    public void onFailure(Call<EvalResponse> call, Throwable t) {
+
+
     }
 }
