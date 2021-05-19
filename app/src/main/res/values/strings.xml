@@ -45,4 +45,10 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_oxigen_sat">Introducir valor de saturacion de oxigeno</string>
+    <string name="enter_heart_rate">Introducir valor de ritmo cardiaco</string>
+    <string name="hint_oxi_sat">Este valor es en (%) y tiene que estar entre 1 y 100</string>
+    <string name="hint_heart_rate">Este valor es en pulsasiones por minuto (ppm) y tiene que estar entre 0 y 200</string>
+    <string name="Evaluation">Evaluar</string>
+    <string name="hint_csv">Subir archivo CSV</string>
 </resources>

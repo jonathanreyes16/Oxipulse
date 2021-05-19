@@ -21,7 +21,7 @@
         android:id="@+id/navigation_check"
         android:name="com.example.oxipulse.ui.Evaluation.EvaluationFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_check" />
+        tools:layout="@layout/fragment_evaluation" />
     <fragment
         android:id="@+id/navigation_exit"
         android:name="com.example.oxipulse.ui.Exit.ExitFragment"

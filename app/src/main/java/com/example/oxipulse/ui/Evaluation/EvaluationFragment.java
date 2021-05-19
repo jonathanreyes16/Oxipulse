@@ -16,20 +16,16 @@ import com.example.oxipulse.R;
 
 public class EvaluationFragment extends Fragment {
 
-    private EvaluationViewModel notificationsViewModel;
+    private EvaluationViewModel evaluationViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
+        evaluationViewModel =
                 new ViewModelProvider(this).get(EvaluationViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_check, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        View root = inflater.inflate(R.layout.fragment_evaluation, container, false);
+
+
+
         return root;
     }
 }
