@@ -1,14 +1,8 @@
 package com.example.oxipulse.ui.Records;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.example.oxipulse.classes.FirebaseQueryLiveData;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class RecordsViewModel extends ViewModel {
 
