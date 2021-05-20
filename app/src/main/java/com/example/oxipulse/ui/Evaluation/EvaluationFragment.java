@@ -35,13 +35,16 @@ public class EvaluationFragment extends Fragment implements Callback<EvalRespons
         evaluationViewModel =
                 new ViewModelProvider(this).get(EvaluationViewModel.class);
         View root = inflater.inflate(R.layout.fragment_evaluation, container, false);
+        et_oxigenSat=root.findViewById(R.id.text_input_oxigen);
+        et_heartRate=root.findViewById(R.id.text_input_heartrate);
         btn_eval= root.findViewById(R.id.button_evaluation);
 
         btn_eval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call<EvalResponse> responseCall=ApiAdapter.getApiService().getEval();
-                responseCall.enqueue();
+                Call<EvalResponse> responseCall=ApiAdapter.getApiService().getEval(et_oxigenSat.getText().toString(),et_heartRate.getText().toString());
+                responseCall.enqueue(EvaluationFragment.this);
+
             }
         });
 
