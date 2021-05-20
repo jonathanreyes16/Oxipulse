@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.oxipulse.R;
-import com.example.oxipulse.classes.patient;
+import com.example.oxipulse.model.patient;
 import com.example.oxipulse.ui.DatePicker.DatePickerFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

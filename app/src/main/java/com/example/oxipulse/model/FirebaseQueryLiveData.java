@@ -1,4 +1,4 @@
-package com.example.oxipulse.classes;
+package com.example.oxipulse.model;
 
 import android.util.Log;
 
@@ -11,6 +11,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseQueryLiveData  extends LiveData<DataSnapshot> {
+
+    //esta es una clase de apoyo para usar firebase query en un live data,
+    //usando
     private static final String LOG_TAG = "FirebaseQueryLiveData";
 
     private final Query query;

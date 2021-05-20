@@ -1,4 +1,4 @@
-package com.example.oxipulse.classes;
+package com.example.oxipulse.model;
 
 public class person {
     private String FirstName;
