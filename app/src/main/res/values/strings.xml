@@ -22,7 +22,7 @@
     <string name="first_name">Nombre</string>
     <string name="last_name">Apellido Paterno</string>
     <string name="middle_name">Apellido Materno</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
     <string name="health_personel">Soy Personal de Salud</string>
     <string name="accept_legal_notice">He leido, y entiendo y acepto el Aviso legal de Oxipulse</string>
     <string name="Register">Registrarse</string>

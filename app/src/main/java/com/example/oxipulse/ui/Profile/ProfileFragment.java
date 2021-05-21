@@ -108,6 +108,9 @@ public class ProfileFragment extends Fragment {
                         tName.setText(p.getFirstName());
                         tLast1.setText(p.getLastName());
                         tLast2.setText(p.getMiddleName());
+                        if (p.getGender() ==null){
+
+                        }
                         tBirthdate.setText(p.getBirthdate());
                         tWeight.setText(p.getWeight());
                         tHeight.setText(p.getHeight());
