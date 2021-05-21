@@ -108,20 +108,46 @@ public class ProfileFragment extends Fragment {
                         tName.setText(p.getFirstName());
                         tLast1.setText(p.getLastName());
                         tLast2.setText(p.getMiddleName());
-                        if (p.getGender() ==null){
-
+                        if (p.getGender() !=null){
+                            if (p.getGender().equals("Hombre")){
+                                tGender.setSelection(0);
+                            }
+                            else {tGender.setSelection(1);}
                         }
+                        if (p.getBirthdate()!= null){
+                            tBirthdate.setText(p.getBirthdate());
+                        }
+                        if (p.getHeight()!=null){
+                            tHeight.setText(p.getHeight());
+                        }
+                        if (p.getWeight()!=null){
+                            tWeight.setText(p.getWeight());
+                        }
+                        if ( p.getBirthdate()!=null && p.getWeight()!=null && p.getHeight()!=null
+                                && p.getGender()!=null &&p.getAsma()!=null && p.getDiabetes()!=null && p.getHipertension()!=null
+                                ){
+                            tBirthdate.setText(p.getBirthdate());
+                            tWeight.setText(p.getWeight());
+                            tHeight.setText(p.getHeight());
+                            if (p.getGender().equals("Hombre")) {
+                                tGender.setSelection(0);
+                            } else {tGender.setSelection(1);}
+                            tAsthma.setChecked(Boolean.parseBoolean(p.getAsma()));
+                            tDiabetes.setChecked(Boolean.parseBoolean(p.getDiabetes()));
+                            tHypertension.setChecked(Boolean.parseBoolean(p.getHipertension()));
+                        }
+                        /*
                         tBirthdate.setText(p.getBirthdate());
                         tWeight.setText(p.getWeight());
                         tHeight.setText(p.getHeight());
-                        if (p.getGender().equals("Hombre")){
+                        if (p.getGender().equals("Hombre")) {
                             tGender.setSelection(0);
-                        }
-                        else {tGender.setSelection(1);}
+                        } else {tGender.setSelection(1);}
                         tAsthma.setChecked(Boolean.parseBoolean(p.getAsma()));
                         tDiabetes.setChecked(Boolean.parseBoolean(p.getDiabetes()));
                         tHypertension.setChecked(Boolean.parseBoolean(p.getHipertension()));
 
+                         */
                         //poner la imager de perfil, no funciona aun
                         //if (p.getImageUrl()!=null){
                         //    profilePic.setImageURI(Uri.parse(p.getImageUrl())); //agregar la imagen

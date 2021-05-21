@@ -65,7 +65,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         Log.e("Error",t.getMessage());
                     }
                 });
-
             }
         });
 
