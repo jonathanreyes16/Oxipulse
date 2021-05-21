@@ -53,12 +53,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         //evento del boton registro
         btn_register.setOnClickListener(v -> {
-            String email= Objects.requireNonNull(txt_email.getText()).toString();
-            String firstname= Objects.requireNonNull(txt_first_name.getText()).toString();
-            String lastname= Objects.requireNonNull(txt_last_name.getText()).toString();
-            String middlename= Objects.requireNonNull(txt_middle_name.getText()).toString();
-            String password= Objects.requireNonNull(txt_password.getText()).toString();
-            String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString();
+            String email= Objects.requireNonNull(txt_email.getText()).toString().trim();
+            String firstname= Objects.requireNonNull(txt_first_name.getText()).toString().trim();
+            String lastname= Objects.requireNonNull(txt_last_name.getText()).toString().trim();
+            String middlename= Objects.requireNonNull(txt_middle_name.getText()).toString().trim();
+            String password= Objects.requireNonNull(txt_password.getText()).toString().trim();
+            String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString().trim();
 
             String isd = String.valueOf(chk_health_person.isChecked());
             //si
