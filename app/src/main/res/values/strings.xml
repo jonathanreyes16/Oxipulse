@@ -43,7 +43,7 @@
         <item>Hombre</item>
         <item>Mujer</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_oxigen_sat">Introducir valor de saturacion de oxigeno</string>
     <string name="enter_heart_rate">Introducir valor de ritmo cardiaco</string>
@@ -51,4 +51,10 @@
     <string name="hint_heart_rate">Este valor es en pulsasiones por minuto (ppm) y tiene que estar entre 0 y 200</string>
     <string name="Evaluation">Evaluar</string>
     <string name="hint_csv">Subir archivo CSV</string>
+    <string name="eval_res_green">Sus resultados son normales, no hay necesidad de consulta medica</string>
+    <string name="eval_res_yellow">Sus resultados estan ligeramente por debajo de lo normal, no hay necesidad de consulta medica</string>
+    <string name="eval_res_orange">Sus resultados estan por debajo de lo normal, agende una cita medica</string>
+    <string name="eval_res_red">Sus resultados son muy bajos, consulte a su medico mas cercano</string>
+    <string name="cont_descr_nurse_with_triage">enfermera sosteniendo color</string>
+    <string name="cont_desc_triage_color">Color de la respuesta del triage</string>
 </resources>

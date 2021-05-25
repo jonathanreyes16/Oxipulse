@@ -1,5 +1,9 @@
 package com.example.oxipulse.ui.Evaluation;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -17,6 +24,8 @@ import com.example.oxipulse.R;
 import com.example.oxipulse.api.ApiAdapter;
 import com.example.oxipulse.model.EvalResponse;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.w3c.dom.Text;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +37,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     private EvaluationViewModel evaluationViewModel;
     TextInputEditText et_oxigenSat,et_heartRate,et_csv;
     Button btn_eval;
+    int ColorTriageRed;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -44,6 +54,27 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         ((EditText)root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
         ((EditText)root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
 
+        //final ImageView triageColor = (ImageView)
+        final View triagealert =inflater.inflate(R.layout.eval_dialog_layout,null);
+         ImageView triageColor = (ImageView) triagealert.findViewById(R.id.img_triage_color);
+        TextView tMensajeTriage = (TextView) triagealert.findViewById(R.id.tv_mensaje);
+
+
+        //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder
+                .setView(triagealert)
+                .setTitle("Triage")
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Evento despues de dar ok
+                        //TODO Guardar resultado en base de datos
+
+                    }
+                });
+        Dialog d = alertDialogBuilder.create();
 
         btn_eval.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,12 +85,32 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 responseCall.enqueue(new Callback<EvalResponse>() {
                     @Override
                     public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+                        //si la respuesta se obtiene
                         if (response.isSuccessful()){
-                            et_csv.setText( response.body().getData().get(0).getCodigo());
-
+                            //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
+                            switch (response.body().getData().get(0).getCodigo()){
+                                case "Verde":
+                                    triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etverde,null));
+                                    tMensajeTriage.setText(R.string.eval_res_green);
+                                    break;
+                                case "amarillo":
+                                    triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etamar,null));
+                                    tMensajeTriage.setText(R.string.eval_res_yellow);
+                                    break;
+                                case "naranja":
+                                    triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etnaranja,null));
+                                    tMensajeTriage.setText(R.string.eval_res_orange);
+                                    break;
+                                case "rojo":
+                                    triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etrojo,null));
+                                    tMensajeTriage.setText(R.string.eval_res_red);
+                                    break;
+                            }
+                            d.show();
                         }
                     }
 
+                    //si la respuesta es incorrecta
                     @Override
                     public void onFailure(Call<EvalResponse> call, Throwable t) {
                         Log.e("Error",t.getMessage());
@@ -67,7 +118,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 });
             }
         });
-
         return root;
     }
 
