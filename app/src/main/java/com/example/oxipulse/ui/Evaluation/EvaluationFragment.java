@@ -24,6 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.oxipulse.R;
 import com.example.oxipulse.api.ApiAdapter;
 import com.example.oxipulse.model.EvalResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,11 +77,12 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         TextView tMensajeTriage = (TextView) triagealert.findViewById(R.id.tv_mensaje);
 
         //firebase logic
-        uid=user.getUid();
         Database= FirebaseDatabase.getInstance();
+        /*  uid=user.getUid();
+
         ref=Database.getReference("Records");
         ref2=Database.getReference("User-Records");
-
+       */
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
@@ -148,6 +151,12 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
     private void save_eval(Response<EvalResponse> response) {
         date= java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+
+        ref=Database.getReference("Records").push();
+        ref2=Database.getReference("User-Records");
+        uid=user.getUid();
+
+
         HashMap<String,String> hashMap = new HashMap<>();
         hashMap.put("date",date);
         hashMap.put("tag",response.body().getData().get(0).getCodigo());
@@ -155,27 +164,18 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         hashMap.put("oxi",oxi);
         hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
         hashMap.put(uid,"true");
-        ref.push().setValue(hashMap).addOnCompleteListener(task -> {
+
+        String key = ref.getKey();
+
+        ref.setValue(hashMap);
+        ref2.child(uid).child(key).setValue("true").addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
-            }else {
-                Log.e("error","Error saving evaluation",task.getException());
+            }
+            else {
+                Log.e("error", "Error saving record", task.getException());
             }
         });
-
-        //Todo guardar valores a user-records
-         HashMap<String,String> hashMap2 = new HashMap<>();
-         hashMap2.put(uid,"true");
-         hashMap2.put(ref.getKey(),"true");
-         //ref2.push().setValue(hashMap2);
-
-         ref2.push().setValue(hashMap2).addOnCompleteListener(task -> {
-             if (task.isSuccessful()) {
-                 Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
-             } else {
-                 Log.e("error", "Error saving record", task.getException());
-             }
-         });
 
     }
 
