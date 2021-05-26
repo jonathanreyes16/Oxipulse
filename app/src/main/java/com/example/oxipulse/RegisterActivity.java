@@ -77,8 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
                 //deben aceptarse los terminos y condiciones
                 Toast.makeText(RegisterActivity.this, "You should accept the legal notice to use this app", Toast.LENGTH_SHORT).show();
             }else {
-                //si todo lo anterior es correcto se crea un usuario
+                //si todos lo anterior es correcto se crea un usuario
                 register(firstname,lastname,middlename,email,password,isd);
+
             }
         });
 

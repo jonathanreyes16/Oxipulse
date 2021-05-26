@@ -50,7 +50,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     String uid,date;
     FirebaseUser user;
     FirebaseDatabase Database;
-    DatabaseReference ref;
+    DatabaseReference ref,ref2;
 
 
 
@@ -78,6 +78,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         uid=user.getUid();
         Database= FirebaseDatabase.getInstance();
         ref=Database.getReference("Records");
+        ref2=Database.getReference("User-Records");
 
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
@@ -152,7 +153,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         hashMap.put("tag",response.body().getData().get(0).getCodigo());
         hashMap.put("hr",sat);
         hashMap.put("oxi",oxi);
-        hashMap.put("urgence_degree",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
+        hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
         hashMap.put(uid,"true");
         ref.push().setValue(hashMap).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -162,7 +163,23 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             }
         });
 
+        //Todo guardar valores a user-records
+         HashMap<String,String> hashMap2 = new HashMap<>();
+         hashMap2.put(uid,"true");
+         hashMap2.put(ref.getKey(),"true");
+         //ref2.push().setValue(hashMap2);
+
+         ref2.push().setValue(hashMap2).addOnCompleteListener(task -> {
+             if (task.isSuccessful()) {
+                 Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
+             } else {
+                 Log.e("error", "Error saving record", task.getException());
+             }
+         });
+
     }
+
+
 
     @Override
     public void onFocusChange(View view, boolean b) {
