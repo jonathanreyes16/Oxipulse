@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -24,8 +25,16 @@ import com.example.oxipulse.R;
 import com.example.oxipulse.api.ApiAdapter;
 import com.example.oxipulse.model.EvalResponse;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
+
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +46,12 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     private EvaluationViewModel evaluationViewModel;
     TextInputEditText et_oxigenSat,et_heartRate,et_csv;
     Button btn_eval;
-    int ColorTriageRed;
+    String oxi,sat;
+    String uid,date;
+    FirebaseUser user;
+    FirebaseDatabase Database;
+    DatabaseReference ref;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,12 +67,17 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         et_csv=root.findViewById(R.id.text_input_csv);
         ((EditText)root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
         ((EditText)root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
+        user= FirebaseAuth.getInstance().getCurrentUser();
 
         //final ImageView triageColor = (ImageView)
         final View triagealert =inflater.inflate(R.layout.eval_dialog_layout,null);
          ImageView triageColor = (ImageView) triagealert.findViewById(R.id.img_triage_color);
         TextView tMensajeTriage = (TextView) triagealert.findViewById(R.id.tv_mensaje);
 
+        //firebase logic
+        uid=user.getUid();
+        Database= FirebaseDatabase.getInstance();
+        ref=Database.getReference("Records");
 
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
@@ -70,7 +89,9 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Evento despues de dar ok
-                        //TODO Guardar resultado en base de datos
+                        et_oxigenSat.requestFocus();
+                        et_heartRate.setText("");
+                        et_oxigenSat.setText("");
 
                     }
                 });
@@ -81,7 +102,9 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             public void onClick(View v) {
                 et_heartRate.clearFocus();
                 et_oxigenSat.clearFocus();
-                Call<EvalResponse> responseCall = ApiAdapter.getApiService().getEval(et_oxigenSat.getText().toString(),et_heartRate.getText().toString());
+                oxi=et_oxigenSat.getText().toString();
+                sat=et_heartRate.getText().toString();
+                Call<EvalResponse> responseCall = ApiAdapter.getApiService().getEval(oxi,sat);
                 responseCall.enqueue(new Callback<EvalResponse>() {
                     @Override
                     public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
@@ -107,9 +130,10 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                                     break;
                             }
                             d.show();
+                            //Guardar resultado en base de datos
+                            save_eval(response);
                         }
                     }
-
                     //si la respuesta es incorrecta
                     @Override
                     public void onFailure(Call<EvalResponse> call, Throwable t) {
@@ -121,6 +145,24 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         return root;
     }
 
+    private void save_eval(Response<EvalResponse> response) {
+        date= java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+        HashMap<String,String> hashMap = new HashMap<>();
+        hashMap.put("date",date);
+        hashMap.put("tag",response.body().getData().get(0).getCodigo());
+        hashMap.put("hr",sat);
+        hashMap.put("oxi",oxi);
+        hashMap.put("urgence_degree",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
+        hashMap.put(uid,"true");
+        ref.push().setValue(hashMap).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
+            }else {
+                Log.e("error","Error saving evaluation",task.getException());
+            }
+        });
+
+    }
 
     @Override
     public void onFocusChange(View view, boolean b) {

@@ -103,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                         hashMap.put("imageURL","default");
                         hashMap.put("isDoc",isdoc);
 
+
                         databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()){
                                 //Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
