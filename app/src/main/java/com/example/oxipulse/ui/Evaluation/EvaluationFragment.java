@@ -37,6 +37,7 @@ import org.w3c.dom.Text;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,11 +79,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
         //firebase logic
         Database= FirebaseDatabase.getInstance();
-        /*  uid=user.getUid();
 
-        ref=Database.getReference("Records");
-        ref2=Database.getReference("User-Records");
-       */
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
