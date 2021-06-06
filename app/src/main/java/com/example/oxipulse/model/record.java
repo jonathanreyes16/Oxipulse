@@ -2,13 +2,16 @@ package com.example.oxipulse.model;
 
 import java.io.Serializable;
 
-public class record implements Serializable {
-    String date,degree_of_urgency,id,hr,oxi,tag;
+public class record  {
+    String date,degree_of_urgency,hr,oxi,tag;
+
+    public record() {
+    }
 
     public record(String date, String degree_of_urgency, String id, String hr, String oxi, String tag) {
         this.date = date;
         this.degree_of_urgency = degree_of_urgency;
-        this.id = id;
+
         this.hr = hr;
         this.oxi = oxi;
         this.tag = tag;
@@ -28,14 +31,6 @@ public class record implements Serializable {
 
     public void setDegree_of_urgency(String degree_of_urgency) {
         this.degree_of_urgency = degree_of_urgency;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getHr() {

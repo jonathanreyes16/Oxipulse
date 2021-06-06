@@ -70,12 +70,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             super(itemView);
             // get the reference of item view's
             data = (TextView) itemView.findViewById(R.id.row_txt1);
-            /*
-            fecha = (TextView) itemView.findViewById(R.id.row_text1);
-            ritCar = (TextView) itemView.findViewById(R.id.row_text2);
-            satOxi = (TextView) itemView.findViewById(R.id.row_text3);
-            etiqueta = (TextView) itemView.findViewById(R.id.row_text4);
-             */
+
         }
     }
 }

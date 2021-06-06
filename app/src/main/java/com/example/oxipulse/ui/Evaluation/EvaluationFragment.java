@@ -160,7 +160,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         hashMap.put("hr",sat);
         hashMap.put("oxi",oxi);
         hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
-        hashMap.put(uid,"true");
+        //hashMap.put("id",uid);
 
         String key = ref.getKey();
 

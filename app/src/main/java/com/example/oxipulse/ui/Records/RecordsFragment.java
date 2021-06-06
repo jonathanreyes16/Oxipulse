@@ -25,9 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.oxipulse.R;
 import com.example.oxipulse.model.CustomAdapter;
+import com.example.oxipulse.model.patient;
 import com.example.oxipulse.model.record;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,13 +40,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import kotlinx.coroutines.AwaitKt;
 
 public class RecordsFragment extends Fragment {
 
     private RecordsViewModel recordsViewModel;
     ArrayList<String> patientdata = new ArrayList<>(Arrays.asList("fecha1", "hr1","rc1","etiqueta1","fecha2", "hr2","rc2","etiqueta2"));
     ArrayList<String> headers = new ArrayList<>(Arrays.asList("Fecha","Ritmo Cardiaco(ppm)","Saturacion de oxigeno(%)","Etiqueta" ));
-
+    ArrayList<record> PatientRecords = new ArrayList<>();
     FirebaseUser user;
     FirebaseDatabase database;
     DatabaseReference User_RecordReference,RecordReference;
@@ -60,71 +65,86 @@ public class RecordsFragment extends Fragment {
 
         //datos y configuracion de los encabezados de la tabla de usuarios
         RecyclerView headersView = (RecyclerView) v.findViewById(R.id.listheaders);
-        GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(),4);
+        GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(), 4);
         headersView.setLayoutManager(headerLayoutManager);
-        CustomAdapter headerAdapter = new CustomAdapter(getContext(),headers);
+        CustomAdapter headerAdapter = new CustomAdapter(getContext(), headers);
         headersView.setAdapter(headerAdapter);
 
         //datos y configuraion del recycler view que se encarga de los datos de los pacientes
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.datarecycler);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
-        CustomAdapter customAdapter = new CustomAdapter(getContext(),patientdata);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
+        CustomAdapter customAdapter = new CustomAdapter(getContext(), patientdata);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(customAdapter);
+
 
         //Firebase current user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         //Si el usuario no es nullo se sigue con la aplicacion
-        if (user != null){
+        if (user != null) {
             //uid es igual al uid del usuario actual
-            uid=user.getUid();
+            uid = user.getUid();
             //Se obtiene la instancia de la base de datos
             database = FirebaseDatabase.getInstance();
-            User_RecordReference=database.getReference("User-Records").child(uid);
-            RecordReference=database.getReference("Records");
-            RecordReference2=database.getReference("Records");
+            User_RecordReference = database.getReference("User-Records").child(uid);
+            RecordReference = database.getReference("Records");
+            RecordReference2 = database.getReference("Records");
 
 
+            //start();
+            Log.e("list", PatientRecords.toString());
 
-            User_RecordReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    //si la tarea falla se crea un log del error
-                    if (!task.isSuccessful()) {
-                        Log.e("firebase", "Error getting data", task.getException());
-                    }
-                    //si se completa la tarea correctamente se sigue con la aplicacion, que en este caso es obtener la base de datos
-                    else {
-                        /*
-                        ArrayList<record> PatientRecords = new ArrayList<record>();
-                        //PatientRecords=task.getResult().getValue(record.class);
-                        for ( DataSnapshot s :task.getResult().getChildren()) {
-                            //PatientRecords.add(s.getValue(record.class));
-                            record r= new record(s.getValue(record.class).getDate(),
-                                    s.getValue(record.class).getDegree_of_urgency(),
-                                    s.getValue(record.class).getId(),
-                                    s.getValue(record.class).getHr(),
-                                    s.getValue(record.class).getOxi(),
-                                    s.getValue(record.class).getTag()
-                                    );
-                            PatientRecords.add(r);
-
-                         */
-                           // Log.e("ejemplo",s.getValue(record.class).toString());
-                        }
-                    }
-                });
-            }
-
-
-
-
-
-
+        }
 
 
         return v;
     }
+
+    //@Override
+    //public void onStart(){
+    //    super.onStart();
+    //    adapter.startListening();
+    //}
+
+
+
+    private void start(){
+
+        User_RecordReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                //si la tarea falla se crea un log del error
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                //si se completa la tarea correctamente se sigue con la aplicacion, que en este caso es obtener la base de datos
+                else {
+                     for (DataSnapshot s : Objects.requireNonNull(task.getResult()).getChildren()) {
+                        Log.e("recordsId", Objects.requireNonNull(s.getKey()));
+
+                        String recordid = s.getKey();
+
+                        RecordReference.child(recordid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.d("Error", "No data");
+                                } else {
+                                    //Log.e("Error", "onComplete: "+ Objects.requireNonNull(task.getResult()).toString());
+                                    record r = (task.getResult().getValue(record.class));
+                                    //Log.e("listData", r.getDate().toString());
+                                    PatientRecords.add(r);
+                                   // Log.e("list", PatientRecords.toString());
+                                }
+                            }
+                        });
+                    }
+                }
+
+            }
+        });
+    }
+
 }
