@@ -32,12 +32,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,14 +73,14 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         et_heartRate=root.findViewById(R.id.text_input_heartrate);
         btn_eval= root.findViewById(R.id.button_evaluation);
         et_csv=root.findViewById(R.id.text_input_csv);
-        ((EditText)root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
-        ((EditText)root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
+        (root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
+        (root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
         user= FirebaseAuth.getInstance().getCurrentUser();
 
         //final ImageView triageColor = (ImageView)
         final View triagealert =inflater.inflate(R.layout.eval_dialog_layout,null);
-         ImageView triageColor = (ImageView) triagealert.findViewById(R.id.img_triage_color);
-        TextView tMensajeTriage = (TextView) triagealert.findViewById(R.id.tv_mensaje);
+         ImageView triageColor = triagealert.findViewById(R.id.img_triage_color);
+        TextView tMensajeTriage = triagealert.findViewById(R.id.tv_mensaje);
 
         //firebase logic
         Database= FirebaseDatabase.getInstance();
@@ -108,7 +113,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 Call<EvalResponse> responseCall = ApiAdapter.getApiService().getEval(oxi,sat);
                 responseCall.enqueue(new Callback<EvalResponse>() {
                     @Override
-                    public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+                    public void onResponse(@NotNull Call<EvalResponse> call, @NotNull Response<EvalResponse> response) {
                         //si la respuesta se obtiene
                         if (response.isSuccessful()){
                             //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
@@ -137,7 +142,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                     }
                     //si la respuesta es incorrecta
                     @Override
-                    public void onFailure(Call<EvalResponse> call, Throwable t) {
+                    public void onFailure(@NotNull Call<EvalResponse> call, @NotNull Throwable t) {
                         Log.e("Error",t.getMessage());
                     }
                 });
@@ -147,7 +152,8 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     }
 
     private void save_eval(Response<EvalResponse> response) {
-        date= java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+        date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
+       // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
 
         ref=Database.getReference("Records").push();
         ref2=Database.getReference("User-Records");
@@ -196,6 +202,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         }
                     }
                     break;
+
             }
         }
     }

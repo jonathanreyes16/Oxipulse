@@ -25,8 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.oxipulse.R;
 import com.example.oxipulse.model.CustomAdapter;
+import com.example.oxipulse.model.RecordAdapter;
 import com.example.oxipulse.model.patient;
 import com.example.oxipulse.model.record;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -50,10 +52,12 @@ public class RecordsFragment extends Fragment {
     ArrayList<String> patientdata = new ArrayList<>(Arrays.asList("fecha1", "hr1","rc1","etiqueta1","fecha2", "hr2","rc2","etiqueta2"));
     ArrayList<String> headers = new ArrayList<>(Arrays.asList("Fecha","Ritmo Cardiaco(ppm)","Saturacion de oxigeno(%)","Etiqueta" ));
     ArrayList<record> PatientRecords = new ArrayList<>();
+    //ArrayList<String> recordids = new ArrayList<>();
     FirebaseUser user;
     FirebaseDatabase database;
     DatabaseReference User_RecordReference,RecordReference;
     String uid;
+    RecordAdapter recordAdapter;
     DatabaseReference RecordReference2;
 
 
@@ -62,22 +66,6 @@ public class RecordsFragment extends Fragment {
         recordsViewModel =
                 new ViewModelProvider(this).get(RecordsViewModel.class);
         View v = inflater.inflate(R.layout.fragment_records, container, false);
-
-        //datos y configuracion de los encabezados de la tabla de usuarios
-        RecyclerView headersView = (RecyclerView) v.findViewById(R.id.listheaders);
-        GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(), 4);
-        headersView.setLayoutManager(headerLayoutManager);
-        CustomAdapter headerAdapter = new CustomAdapter(getContext(), headers);
-        headersView.setAdapter(headerAdapter);
-
-        //datos y configuraion del recycler view que se encarga de los datos de los pacientes
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.datarecycler);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        CustomAdapter customAdapter = new CustomAdapter(getContext(), patientdata);
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(customAdapter);
-
 
         //Firebase current user
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -90,11 +78,27 @@ public class RecordsFragment extends Fragment {
             database = FirebaseDatabase.getInstance();
             User_RecordReference = database.getReference("User-Records").child(uid);
             RecordReference = database.getReference("Records");
-            RecordReference2 = database.getReference("Records");
+           // RecordReference2 = database.getReference("User-Records").child(uid);
+
+            //begin();
+            //datos y configuracion de los encabezados de la tabla de usuarios
+            RecyclerView headersView =  v.findViewById(R.id.listheaders);
+            GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(), 4);
+            headersView.setLayoutManager(headerLayoutManager);
+            CustomAdapter headerAdapter = new CustomAdapter(getContext(), headers);
+            headersView.setAdapter(headerAdapter);
+
+            //datos y configuraion del recycler view que se encarga de los datos de los pacientes
+            RecyclerView recyclerView =  v.findViewById(R.id.datarecycler);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            FirebaseRecyclerOptions<record>  options = new FirebaseRecyclerOptions.Builder<record>().setIndexedQuery(User_RecordReference,RecordReference,record.class).build();
+            recordAdapter = new RecordAdapter(options);
+            recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+            recyclerView.setAdapter(recordAdapter);
 
 
-            //start();
-            Log.e("list", PatientRecords.toString());
+            //Log.e("list", PatientRecords.toString());
 
         }
 
@@ -102,49 +106,54 @@ public class RecordsFragment extends Fragment {
         return v;
     }
 
-    //@Override
-    //public void onStart(){
-    //    super.onStart();
-    //    adapter.startListening();
-    //}
-
-
-
-    private void start(){
-
-        User_RecordReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                //si la tarea falla se crea un log del error
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                //si se completa la tarea correctamente se sigue con la aplicacion, que en este caso es obtener la base de datos
-                else {
-                     for (DataSnapshot s : Objects.requireNonNull(task.getResult()).getChildren()) {
-                        Log.e("recordsId", Objects.requireNonNull(s.getKey()));
-
-                        String recordid = s.getKey();
-
-                        RecordReference.child(recordid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.d("Error", "No data");
-                                } else {
-                                    //Log.e("Error", "onComplete: "+ Objects.requireNonNull(task.getResult()).toString());
-                                    record r = (task.getResult().getValue(record.class));
-                                    //Log.e("listData", r.getDate().toString());
-                                    PatientRecords.add(r);
-                                   // Log.e("list", PatientRecords.toString());
-                                }
-                            }
-                        });
-                    }
-                }
-
-            }
-        });
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        recordAdapter.stopListening();
     }
 
+  // private void start(){
+
+  //     User_RecordReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+  //         @Override
+  //         public void onComplete(@NonNull Task<DataSnapshot> task) {
+  //             //si la tarea falla se crea un log del error
+  //             if (!task.isSuccessful()) {
+  //                 Log.e("firebase", "Error getting data", task.getException());
+  //             }
+  //             //si se completa la tarea correctamente se sigue con la aplicacion, que en este caso es obtener la base de datos
+  //             else {
+  //                  for (DataSnapshot s : Objects.requireNonNull(task.getResult()).getChildren()) {
+  //                     Log.e("recordsId", Objects.requireNonNull(s.getKey()));
+
+  //                     String recordid = s.getKey();
+
+  //                     RecordReference.child(recordid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+  //                         @Override
+  //                         public void onComplete(@NonNull Task<DataSnapshot> task) {
+  //                             if (!task.isSuccessful()) {
+  //                                 Log.d("Error", "No data");
+  //                             } else {
+  //                                 //Log.e("Error", "onComplete: "+ Objects.requireNonNull(task.getResult()).toString());
+  //                                 record r = (task.getResult().getValue(record.class));
+  //                                 //Log.e("listData", r.getDate().toString());
+  //                                 PatientRecords.add(r);
+
+  //                                // Log.e("list", PatientRecords.toString());
+  //                             }
+  //                         }
+  //                     });
+  //                 }
+  //             }
+
+  //         }
+  //     });
+  // }
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        recordAdapter.startListening();
+    }
 }
