@@ -57,4 +57,8 @@
     <string name="eval_res_red">Sus resultados son muy bajos, consulte a su medico mas cercano</string>
     <string name="cont_descr_nurse_with_triage">enfermera sosteniendo color</string>
     <string name="cont_desc_triage_color">Color de la respuesta del triage</string>
+    <string name="date_header">Fecha</string>
+    <string name="header_oxigen_saturation">Saturacion\nde oxigeno</string>
+    <string name="header_label">Etiqueta</string>
+    <string name="header_heartRate">Ritmo\nCardiaco</string>
 </resources>

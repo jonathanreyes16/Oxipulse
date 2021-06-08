@@ -51,7 +51,7 @@ import retrofit2.Response;
 public class EvaluationFragment extends Fragment implements View.OnFocusChangeListener/* implements Callback<EvalResponse>*/ {
 
     //declaracion de variables
-    private EvaluationViewModel evaluationViewModel;
+    //private EvaluationViewModel evaluationViewModel;
     TextInputEditText et_oxigenSat,et_heartRate,et_csv;
     Button btn_eval;
     String oxi,sat;
@@ -65,8 +65,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //inflar widgets
-        evaluationViewModel =
-                new ViewModelProvider(this).get(EvaluationViewModel.class);
+        //evaluationViewModel = new ViewModelProvider(this).get(EvaluationViewModel.class);
         //se infla la vista del fragment
         View root = inflater.inflate(R.layout.fragment_evaluation, container, false);
         et_oxigenSat=root.findViewById(R.id.text_input_oxigen);

@@ -49,8 +49,8 @@ import kotlinx.coroutines.AwaitKt;
 public class RecordsFragment extends Fragment {
 
     private RecordsViewModel recordsViewModel;
-    ArrayList<String> patientdata = new ArrayList<>(Arrays.asList("fecha1", "hr1","rc1","etiqueta1","fecha2", "hr2","rc2","etiqueta2"));
-    ArrayList<String> headers = new ArrayList<>(Arrays.asList("Fecha","Ritmo Cardiaco(ppm)","Saturacion de oxigeno(%)","Etiqueta" ));
+    //ArrayList<String> patientdata = new ArrayList<>(Arrays.asList("fecha1", "hr1","rc1","etiqueta1","fecha2", "hr2","rc2","etiqueta2"));
+    //ArrayList<String> headers = new ArrayList<>(Arrays.asList("Fecha","Ritmo Cardiaco(ppm)","Saturacion de oxigeno(%)","Etiqueta" ));
     ArrayList<record> PatientRecords = new ArrayList<>();
     //ArrayList<String> recordids = new ArrayList<>();
     FirebaseUser user;
@@ -82,11 +82,11 @@ public class RecordsFragment extends Fragment {
 
             //begin();
             //datos y configuracion de los encabezados de la tabla de usuarios
-            RecyclerView headersView =  v.findViewById(R.id.listheaders);
-            GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(), 4);
-            headersView.setLayoutManager(headerLayoutManager);
-            CustomAdapter headerAdapter = new CustomAdapter(getContext(), headers);
-            headersView.setAdapter(headerAdapter);
+           // RecyclerView headersView =  v.findViewById(R.id.listheaders);
+           // GridLayoutManager headerLayoutManager = new GridLayoutManager(getContext(), 4);
+           // headersView.setLayoutManager(headerLayoutManager);
+           // CustomAdapter headerAdapter = new CustomAdapter(getContext(), headers);
+           // headersView.setAdapter(headerAdapter);
 
             //datos y configuraion del recycler view que se encarga de los datos de los pacientes
             RecyclerView recyclerView =  v.findViewById(R.id.datarecycler);
