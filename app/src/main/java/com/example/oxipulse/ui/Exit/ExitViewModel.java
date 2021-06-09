@@ -1,6 +1,4 @@
-package com.example.oxipulse.ui.exit;
-
-import android.widget.Button;
+package com.example.oxipulse.ui.Exit;
 
 import androidx.lifecycle.ViewModel;
 

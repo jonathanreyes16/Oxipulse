@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class StartActivity extends AppCompatActivity {
-
+    //definicion de variables
     private static final String TAG = "Error:";
     Button btn_ingresar,btn_registro;
 
@@ -21,6 +21,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        //inflar de widget
         btn_ingresar=findViewById(R.id.bingresar);
         btn_registro=findViewById(R.id.bregistro);
 
@@ -36,32 +37,27 @@ public class StartActivity extends AppCompatActivity {
             Log.d(TAG, "onAuthStateChanged:signed_out");
         }
 
-
         //evento del boton registro al hacerse clic
         btn_registro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //se abre la pantalla de registro
                 Intent intent = new Intent(StartActivity.this,RegisterActivity.class);
                 intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-
             }
         });
-
 
         //evento del boton ingresar al hacer clic
         btn_ingresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //se crea la pantalla de login
                 Intent intent = new Intent(StartActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
             }
         });
-
     }
-
-
-
 }

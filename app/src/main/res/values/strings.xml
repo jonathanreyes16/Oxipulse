@@ -22,10 +22,43 @@
     <string name="first_name">Nombre</string>
     <string name="last_name">Apellido Paterno</string>
     <string name="middle_name">Apellido Materno</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
     <string name="health_personel">Soy Personal de Salud</string>
     <string name="accept_legal_notice">He leido, y entiendo y acepto el Aviso legal de Oxipulse</string>
     <string name="Register">Registrarse</string>
     <string name="signout">Cerrar Sesion</string>
     <string name="ask_signout">Seguro que quiere Cerrar Sesion?</string>
+    <string name="nombre">Nombre(s)</string>
+    <string name="apellido_paterno">Apellido Paterno</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="peso">Peso</string>
+    <string name="estatura">Estatura</string>
+    <string name="sexo">Sexo</string>
+    <string name="asma">Asma</string>
+    <string name="hipertension">Hipertension</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="apellido_materno">Apellido Materno</string>
+    <string name="_31_10_1994">31/10/1994</string>
+    <string-array name="Sexos">
+        <item>Hombre</item>
+        <item>Mujer</item>
+    </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_oxigen_sat">Introducir valor de saturacion de oxigeno</string>
+    <string name="enter_heart_rate">Introducir valor de ritmo cardiaco</string>
+    <string name="hint_oxi_sat">Este valor es en (%) y tiene que estar entre 1 y 100</string>
+    <string name="hint_heart_rate">Este valor es en pulsasiones por minuto (ppm) y tiene que estar entre 0 y 200</string>
+    <string name="Evaluation">Evaluar</string>
+    <string name="hint_csv">Subir archivo CSV</string>
+    <string name="eval_res_green">Sus resultados son normales, no hay necesidad de consulta medica</string>
+    <string name="eval_res_yellow">Sus resultados estan ligeramente por debajo de lo normal, no hay necesidad de consulta medica</string>
+    <string name="eval_res_orange">Sus resultados estan por debajo de lo normal, agende una cita medica</string>
+    <string name="eval_res_red">Sus resultados son muy bajos, consulte a su medico mas cercano</string>
+    <string name="cont_descr_nurse_with_triage">enfermera sosteniendo color</string>
+    <string name="cont_desc_triage_color">Color de la respuesta del triage</string>
+    <string name="date_header">Fecha</string>
+    <string name="header_oxigen_saturation">Saturacion\nde oxigeno</string>
+    <string name="header_label">Etiqueta</string>
+    <string name="header_heartRate">Ritmo\nCardiaco</string>
 </resources>

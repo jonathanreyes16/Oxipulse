@@ -1,25 +1,15 @@
 package com.example.oxipulse;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,6 +19,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    //declaracion de variables
     TextInputEditText txt_email;
     TextInputEditText txt_first_name;
     TextInputEditText txt_last_name;
@@ -46,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
+        //inflar widgets
         txt_email=findViewById(R.id.text_input_email);
         txt_first_name = findViewById(R.id.text_input_name);
         txt_last_name= findViewById(R.id.text_input_lastName);
@@ -56,34 +47,39 @@ public class RegisterActivity extends AppCompatActivity {
         chk_health_person=findViewById(R.id.chk_health_person);
         chk_legal_notice=findViewById(R.id.chk_legal_notice);
 
-
         btn_register=findViewById(R.id.button_register);
 
         auth=FirebaseAuth.getInstance();
 
+        //evento del boton registro
         btn_register.setOnClickListener(v -> {
-            String email= Objects.requireNonNull(txt_email.getText()).toString();
-            String firstname= Objects.requireNonNull(txt_first_name.getText()).toString();
-            String lastname= Objects.requireNonNull(txt_last_name.getText()).toString();
-            String middlename= Objects.requireNonNull(txt_middle_name.getText()).toString();
-            String password= Objects.requireNonNull(txt_password.getText()).toString();
-            String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString();
+            String email= Objects.requireNonNull(txt_email.getText()).toString().trim();
+            String firstname= Objects.requireNonNull(txt_first_name.getText()).toString().trim();
+            String lastname= Objects.requireNonNull(txt_last_name.getText()).toString().trim();
+            String middlename= Objects.requireNonNull(txt_middle_name.getText()).toString().trim();
+            String password= Objects.requireNonNull(txt_password.getText()).toString().trim();
+            String confirmpass = Objects.requireNonNull(txt_confirm_pass.getText()).toString().trim();
 
             String isd = String.valueOf(chk_health_person.isChecked());
-
+            //si
             if (TextUtils.isEmpty(firstname) || TextUtils.isEmpty(lastname) || TextUtils.isEmpty(middlename) ||
             TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmpass)||
             !chk_legal_notice.isChecked() )
-            {
+            {//alguno esta vacio monstra un toast que diga "todos los campos son requeridos"
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
             }else if (password.length()<6){
+                //despues, el password debe ser mayor a 6
                 Toast.makeText(RegisterActivity.this, "Password Length Is < 6!", Toast.LENGTH_SHORT).show();
             }else if (!password.equals(confirmpass)){
+                //verifica que los passwords sean iguales
                 Toast.makeText(RegisterActivity.this, "Passwords are different", Toast.LENGTH_SHORT).show();
             }else if(!chk_legal_notice.isChecked()){
+                //deben aceptarse los terminos y condiciones
                 Toast.makeText(RegisterActivity.this, "You should accept the legal notice to use this app", Toast.LENGTH_SHORT).show();
             }else {
+                //si todos lo anterior es correcto se crea un usuario
                 register(firstname,lastname,middlename,email,password,isd);
+
             }
         });
 
@@ -104,9 +100,10 @@ public class RegisterActivity extends AppCompatActivity {
                         hashMap.put("id",userid);
                         hashMap.put("firstName",firstname);
                         hashMap.put("lastName",lastname);
-                        hashMap.put("middlename",middlename);
+                        hashMap.put("middleName",middlename);
                         hashMap.put("imageURL","default");
                         hashMap.put("isDoc",isdoc);
+
 
                         databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()){

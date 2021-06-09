@@ -12,4 +12,10 @@
     <color name="fsclaro">#F4F9F9</color>
     <color name="grey">#666666</color>
     <color name="hipervinculo">#184FF8</color>
+    <color name="color_triage_red">#ED2938</color>
+    <color name="color_triage_orange"> #FF8C01</color>
+    <color name="color_triage_yellow">#FFE733</color>
+    <color name="color_triage_green">#74BD46</color>
+
+
 </resources>
