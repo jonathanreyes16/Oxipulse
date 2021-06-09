@@ -7,242 +7,264 @@
     tools:context=".ui.Profile.ProfileFragment">
 
 
-    <TextView
-        android:id="@+id/tv_name"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="17dp"
-        android:text="@string/nombre"
-
-        app:layout_constraintBottom_toTopOf="@+id/tv_last_n2"
-        app:layout_constraintStart_toStartOf="@+id/tv_last_n2"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
-
-    <TextView
-        android:id="@+id/tv_last_n1"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/apellido_materno"
-        app:layout_constraintBottom_toTopOf="@+id/tv_birthdate"
-        app:layout_constraintStart_toStartOf="@+id/tv_birthdate"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_n2" />
-
-    <TextView
-        android:id="@+id/tv_last_n2"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/apellido_paterno"
-        app:layout_constraintBottom_toTopOf="@+id/tv_last_n1"
-        app:layout_constraintStart_toStartOf="@+id/tv_last_n1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
-
-    <TextView
-        android:id="@+id/tv_birthdate"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/fecha_de_nacimiento"
-        app:layout_constraintBottom_toTopOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/tv_weight"
-        app:layout_constraintTop_toBottomOf="@+id/tv_last_n1" />
-
-    <TextView
-        android:id="@+id/tv_weight"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/peso"
-        app:layout_constraintBottom_toTopOf="@+id/tv_height"
-        app:layout_constraintStart_toStartOf="@+id/tv_height"
-        app:layout_constraintTop_toBottomOf="@+id/tv_birthdate" />
-
-    <TextView
-        android:id="@+id/tv_height"
-        android:layout_width="0dp"
-        android:layout_height="17dp"
-        android:text="@string/estatura"
-        app:layout_constraintBottom_toTopOf="@+id/tv_sex"
-        app:layout_constraintStart_toStartOf="@+id/tv_sex"
-        app:layout_constraintTop_toBottomOf="@+id/tv_weight" />
-
-    <TextView
-        android:id="@+id/tv_sex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sexo"
-        app:layout_constraintBottom_toTopOf="@+id/tv_asma"
-        app:layout_constraintStart_toStartOf="@+id/tv_asma"
-        app:layout_constraintTop_toBottomOf="@+id/tv_height" />
-
-    <TextView
-        android:id="@+id/tv_asma"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/asma"
-        app:layout_constraintBottom_toTopOf="@+id/tv_diabetes"
-        app:layout_constraintStart_toStartOf="@+id/tv_diabetes"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sex" />
-
-    <TextView
-        android:id="@+id/tv_hipertension"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/hipertension"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_diabetes" />
-
-    <TextView
-        android:id="@+id/tv_diabetes"
-        android:layout_width="0dp"
-        android:layout_height="18dp"
-        android:text="@string/diabetes"
-        app:layout_constraintBottom_toTopOf="@+id/tv_hipertension"
-        app:layout_constraintStart_toStartOf="@+id/tv_hipertension"
-        app:layout_constraintTop_toBottomOf="@+id/tv_asma" />
-
-    <EditText
-        android:id="@+id/et_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_name"
-        app:layout_constraintStart_toEndOf="@+id/tv_name"
-        app:layout_constraintStart_toStartOf="@+id/et_name2"
-        tools:visibility="visible" />
-
-    <EditText
-        android:id="@+id/et_name2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n2"
-        app:layout_constraintStart_toStartOf="@+id/et_name3"
-        tools:visibility="visible" />
-
-    <EditText
-        android:id="@+id/et_name3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:ems="10"
-
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_last_n1"
-        app:layout_constraintStart_toStartOf="@+id/s_birthdate"
-        tools:visibility="visible" />
-
-    <EditText
-        android:id="@+id/s_birthdate"
-        android:layout_width="129dp"
         android:layout_height="0dp"
-        android:autofillHints=""
-        android:inputType="text"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_birthdate"
-        app:layout_constraintStart_toStartOf="@+id/np_weight" />
-
-    <EditText
-        android:id="@+id/np_height"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-
-        android:inputType="numberDecimal"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_height"
-        app:layout_constraintStart_toEndOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/s_gender"
-        tools:visibility="visible" />
-
-    <EditText
-        android:id="@+id/np_weight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-
-        android:inputType="numberDecimal"
-        android:singleLine="true"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_weight"
-        app:layout_constraintStart_toStartOf="@+id/np_height"
-        tools:visibility="visible" />
-
-    <Spinner
-        android:id="@+id/s_gender"
-        android:layout_width="122dp"
-        android:layout_height="44dp"
-
-        android:entries="@array/Sexos"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_sex"
-        app:layout_constraintStart_toStartOf="@+id/chk_asthma"
-        tools:visibility="visible" />
-
-    <CheckBox
-        android:id="@+id/chk_asthma"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:textSize="10sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_asma"
-        app:layout_constraintStart_toStartOf="@+id/chk_diabetes"
-        tools:visibility="visible" />
-
-    <CheckBox
-        android:id="@+id/chk_diabetes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_diabetes"
-        app:layout_constraintStart_toStartOf="@+id/chk_hypertension"
-        tools:visibility="visible" />
-
-    <CheckBox
-        android:id="@+id/chk_hypertension"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_hipertension"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.262"
-        app:layout_constraintStart_toEndOf="@+id/tv_hipertension"
-        tools:visibility="visible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgProfilePic">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:columnCount="2"
+            android:orientation="vertical"
+            android:rowCount="15">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:text="@string/nombre" />
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:autofillHints=""
+                android:inputType="textPersonName"
+                android:maxEms="9"
+                android:minEms="7"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_last_n1"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:text="@string/apellido_materno" />
+
+            <EditText
+                android:id="@+id/et_name2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+
+                android:layout_column="1"
+                android:inputType="textPersonName"
+                android:maxEms="9"
+                android:minEms="7"
+                android:singleLine="true"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_last_n2"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:text="@string/apellido_paterno" />
+
+            <EditText
+                android:id="@+id/et_name3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="1"
+
+                android:autofillHints=""
+                android:inputType="textPersonName"
+                android:maxEms="9"
+
+                android:minEms="7"
+                android:singleLine="true"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_height"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:text="@string/estatura" />
+
+            <EditText
+                android:id="@+id/np_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:maxEms="9"
+                android:minEms="7"
+                android:singleLine="true"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_row="4"
+                android:layout_column="0"
+                android:text="@string/peso" />
+
+            <EditText
+                android:id="@+id/np_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="4"
+
+                android:layout_column="1"
+                android:inputType="numberDecimal"
+                android:maxEms="9"
+                android:minEms="7"
+                android:singleLine="true"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_birthdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:text="@string/fecha_de_nacimiento" />
+
+            <EditText
+                android:id="@+id/s_birthdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:autofillHints=""
+                android:inputType="text"
+                android:maxEms="5"
+                android:minEms="3"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/btn_calendar"
+                android:layout_width="30dp"
+                android:layout_height="28dp"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:background="@drawable/ic_baseline_calendar_today_24"
+                android:translationX="100dp"
+                android:visibility="invisible"
+                app:backgroundTint="@color/f_fuerte"
+                app:backgroundTintMode="screen"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="6"
+                android:layout_column="0"
+                android:text="@string/sexo" />
+
+            <Spinner
+                android:id="@+id/s_gender"
+                android:layout_width="122dp"
+                android:layout_height="44dp"
+
+                android:layout_row="6"
+                android:layout_column="1"
+                android:entries="@array/Sexos"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_asma"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_row="8"
+                android:layout_column="0"
+                android:text="@string/asma" />
+
+            <CheckBox
+                android:id="@+id/chk_asthma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_row="8"
+                android:layout_column="1"
+                android:textSize="10sp"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_diabetes"
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_row="9"
+                android:layout_column="0"
+                android:text="@string/diabetes" />
+
+            <CheckBox
+                android:id="@+id/chk_diabetes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_row="9"
+                android:layout_column="1"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_hipertension"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="10"
+                android:layout_column="0"
+                android:text="@string/hipertension" />
+
+            <CheckBox
+                android:id="@+id/chk_hypertension"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_row="10"
+                android:layout_column="1"
+                tools:visibility="visible" />
+
+        </GridLayout>
+    </ScrollView>
 
     <ImageView
         android:id="@+id/imgProfilePic"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
 
+        android:contentDescription="TODO"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.76"
         app:srcCompat="@drawable/ic_person"
-        tools:src="@drawable/ic_person"
-        android:contentDescription="TODO" />
+        tools:src="@drawable/ic_person" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.19" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <Button
         android:id="@+id/btn_edit"
@@ -260,35 +282,25 @@
         android:id="@+id/btn_accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="Aceptar"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
-        app:layout_constraintStart_toEndOf="@+id/chk_asthma" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        tools:visibility="invisible" />
 
     <Button
         android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="Cancelar"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.535"
-        app:layout_constraintStart_toEndOf="@+id/chk_diabetes" />
-
-    <Button
-        android:id="@+id/btn_calendar"
-        android:layout_width="54dp"
-        android:layout_height="37dp"
-        android:visibility="invisible"
-        app:icon="@drawable/ic_baseline_calendar_today_24"
-        app:layout_constraintBaseline_toBaselineOf="@+id/s_birthdate"
-        app:layout_constraintEnd_toEndOf="@+id/et_name3"
-        app:layout_constraintHorizontal_bias="0.354"
-        app:layout_constraintStart_toEndOf="@+id/s_birthdate" />
+        app:layout_constraintHorizontal_bias="0.795"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+        tools:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
