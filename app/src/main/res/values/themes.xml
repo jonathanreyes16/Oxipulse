@@ -3,7 +3,7 @@
     <style name="Theme.Oxipulse" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/f_fuerte</item>
-        <item name="colorPrimaryVariant">@color/f_claro</item>
+        <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/fsclaro</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

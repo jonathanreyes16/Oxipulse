@@ -8,6 +8,7 @@
     tools:context=".ui.Evaluation.EvaluationFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/text_input_layout_oxigen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_oxigen" />
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/text_input_layout_heartrate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
