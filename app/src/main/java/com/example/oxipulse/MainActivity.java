@@ -38,25 +38,5 @@ public class MainActivity extends AppCompatActivity {
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-        /*
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.getItemId()==R.id.navigation_exit){
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    auth.signOut();
-                    Intent intent = new Intent(MainActivity.this,StartActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                return false;
-            }
-        });
-        */
-
-
-
     }
-
 }

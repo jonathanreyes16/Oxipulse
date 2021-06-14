@@ -45,13 +45,4 @@ public class ExitFragment extends Fragment {
         });
         return v;
     }
-
-    /*
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ExitViewModel.class);
-        // TODO: Use the ViewModel
-    }
-    */
 }

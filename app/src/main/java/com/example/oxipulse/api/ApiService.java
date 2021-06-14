@@ -22,7 +22,4 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/upload")
     Call<EvalResponse> postEvalCsv();
-
-
-
 }

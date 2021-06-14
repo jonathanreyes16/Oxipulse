@@ -36,7 +36,6 @@ public class ProfileFragment extends Fragment {
 
     // declaracion de variables
     ProfileViewModel profileViewModel;
-    //declaracion de variables
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
     Button btn_edit, btn_accept,btn_cancel,btn_calendar;
     Spinner tGender;
@@ -84,7 +83,6 @@ public class ProfileFragment extends Fragment {
         if (user!=null){
             //obtenemos el uid del usuario actual  para despues tener todos los datos buscando solo ese id
             uid=user.getUid();
-
             //path de la base de datos que usaremos
             Database= FirebaseDatabase.getInstance();
 
@@ -122,12 +120,10 @@ public class ProfileFragment extends Fragment {
                             tDiabetes.setChecked(Boolean.parseBoolean(p.getDiabetes()));
                             tHypertension.setChecked(Boolean.parseBoolean(p.getHipertension()));
                         }
-
                         //poner la imager de perfil, no funciona aun
                         //if (p.getImageUrl()!=null){
                         //    profilePic.setImageURI(Uri.parse(p.getImageUrl())); //agregar la imagen
                         //}
-
                         //log para debug
                         Log.d("firebase",String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
                     }
