@@ -105,6 +105,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         btn_eval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_eval.setEnabled(false);
                 et_heartRate.clearFocus();
                 et_oxigenSat.clearFocus();
                 oxi=et_oxigenSat.getText().toString();
