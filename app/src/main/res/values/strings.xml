@@ -30,9 +30,9 @@
     <string name="ask_signout">Seguro que quiere Cerrar Sesion?</string>
     <string name="nombre">Nombre(s)</string>
     <string name="apellido_paterno">Apellido Paterno</string>
-    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
-    <string name="peso">Peso</string>
-    <string name="estatura">Estatura</string>
+    <string name="fecha_de_nacimiento">Fecha de\nNacimiento</string>
+    <string name="peso">Peso(Kg)</string>
+    <string name="estatura">Estatura(cm)</string>
     <string name="sexo">Sexo</string>
     <string name="asma">Asma</string>
     <string name="hipertension">Hipertension</string>
@@ -61,4 +61,5 @@
     <string name="header_oxigen_saturation">Saturacion\nde oxigeno</string>
     <string name="header_label">Etiqueta</string>
     <string name="header_heartRate">Ritmo\nCardiaco</string>
+    <string name="health_personnel">Personal De Salud</string>
 </resources>
