@@ -25,6 +25,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
         super(options);
     }
     //int y,m,d;
+     private final String UID = "UID";
 
     public int getAge(int year, int month, int dayOfMonth) {
         return Period.between(
