@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class RecordsFragment extends Fragment {
+public class RecordsFragment extends DialogFragment {
 
     //private RecordsViewModel recordsViewModel;
 
@@ -44,7 +44,13 @@ public class RecordsFragment extends Fragment {
     RecordAdapter recordAdapter;
     PatientAdapter patientAdapter;
 
-
+    public static RecordsFragment newInstance(String uid){
+        RecordsFragment fragment = new RecordsFragment();
+        Bundle args = new Bundle();
+        args.putString("UID", uid);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,17 +59,17 @@ public class RecordsFragment extends Fragment {
 
 
 
-        //Firebase current user
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
-        //Si el usuario no es nullo
-        if (user != null) {
-            //uid es igual al uid del usuario actual
-            uid = user.getUid();
+        if(this.getArguments()!=null){
+            Bundle args = this.getArguments();
+            uid=args.get("UID").toString();
         }
         else {
-            //sino se llama a los argumentos pasados al crear el fragment
-            uid=savedInstanceState.getString("uid");
+            //Firebase current user
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                //uid es igual al uid del usuario actual
+                uid = user.getUid();
+            }
         }
 
         //Se obtiene la instancia de la base de datos
@@ -107,7 +113,6 @@ public class RecordsFragment extends Fragment {
                     Peso.setText(R.string.peso);
                     Estatura.setText(R.string.estatura);
 
-
                     recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
                     recyclerView.setAdapter(patientAdapter);
 
@@ -124,7 +129,7 @@ public class RecordsFragment extends Fragment {
             }
         });
 
-        return v;
+       return v;
     }
 
     @Override

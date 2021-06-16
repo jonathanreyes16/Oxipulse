@@ -1,8 +1,10 @@
 package com.example.oxipulse.model;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,13 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.oxipulse.R;
+import com.example.oxipulse.ui.Records.RecordsFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -48,8 +54,6 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
        //     }
        // });
 
-
-
         return new PatientAdapter.MyViewHolder(v);
     }
 
@@ -57,11 +61,6 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull patient model) {
         String fullname = model.getFirstName()+" "+model.getLastName();
         holder.nombre.setText(fullname);
-
-        //d=Integer.parseInt(model.getBirthdate().substring(0,2));
-        //m=Integer.parseInt(model.getBirthdate().substring(3,5));
-        //y=Integer.parseInt(model.getBirthdate().substring(6));
-        //String age = String.valueOf(getAge(y,m,d));
         holder.edad.setText(model.getBirthdate());
         holder.peso.setText(model.getWeight());
         holder.uid=model.getId();
@@ -71,7 +70,31 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
              @Override
              public void onClick(View v) {
 
-                 Toast.makeText(v.getContext(), "t "+position, Toast.LENGTH_SHORT).show();
+                 Toast.makeText(v.getContext(), "t "+holder.uid, Toast.LENGTH_SHORT).show();
+
+                 Bundle bundle = new Bundle();
+                 bundle.putString("UID",holder.uid);
+                 RecordsFragment fragment =new RecordsFragment();
+                 fragment.setArguments(bundle);
+                 AppCompatActivity activity = ((AppCompatActivity)v.getContext());
+                 fragment.show(activity.getSupportFragmentManager(),holder.uid);
+                 //fragment.show();
+
+                 //AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                 //LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                 //View view1 = inflater.inflate(R.layout.fragment_records,null);
+                 //builder.setView(view1);
+                 //builder.setTitle("Historial");
+                 //Dialog d = builder.create();
+                 //d.show();
+
+                 //RecordsFragment fragment =RecordsFragment.newInstance(holder.uid);
+                 //AppCompatActivity activity = ((AppCompatActivity)v.getContext());
+                 //fragment.show(activity.getSupportFragmentManager(),"UID");
+
+                 //activity.getSupportFragmentManager().beginTransaction().replace(fragment);
+                 //fragment.show(fragmentManager, holder.uid);
                  //AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 //LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 //View view1 = inflater.inflate(R.layout.fragment_records,null);
