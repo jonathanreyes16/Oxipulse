@@ -1,71 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.Records.RecordsFragment">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/datarecycler"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_heartRate">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/lbl_oxi_sat"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="false"
-        android:text="@string/header_oxigen_saturation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/lbl_label"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/lbl_heartRate"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
 
-    <TextView
-        android:id="@+id/lbl_date"
-        android:layout_width="63dp"
-        android:layout_height="25dp"
-        android:text="@string/date_header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/lbl_heartRate"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.033" />
+        tools:context=".ui.Records.RecordsFragment">
 
-    <TextView
-        android:id="@+id/lbl_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/header_label"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/lbl_oxi_sat"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/datarecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_heartRate">
 
-    <TextView
-        android:id="@+id/lbl_heartRate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="false"
-        android:text="@string/header_heartRate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/lbl_oxi_sat"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/lbl_date"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.034" />
+        </androidx.recyclerview.widget.RecyclerView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/lbl_oxi_sat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:singleLine="false"
+            android:text="@string/header_oxigen_saturation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/lbl_label"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lbl_heartRate"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.035" />
+
+        <TextView
+            android:id="@+id/lbl_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/date_header"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/lbl_heartRate"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.036" />
+
+        <TextView
+            android:id="@+id/lbl_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/header_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lbl_oxi_sat"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.036" />
+
+        <TextView
+            android:id="@+id/lbl_heartRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:singleLine="false"
+            android:text="@string/header_heartRate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/lbl_oxi_sat"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lbl_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.034" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
+

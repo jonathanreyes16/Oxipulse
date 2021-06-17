@@ -76,6 +76,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         (root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
         user= FirebaseAuth.getInstance().getCurrentUser();
 
+
         //final ImageView triageColor = (ImageView)
         final View triagealert =inflater.inflate(R.layout.eval_dialog_layout,null);
          ImageView triageColor = triagealert.findViewById(R.id.img_triage_color);
