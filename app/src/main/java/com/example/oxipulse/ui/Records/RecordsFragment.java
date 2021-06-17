@@ -76,7 +76,6 @@ public class RecordsFragment extends DialogFragment {
         database = FirebaseDatabase.getInstance();
         actualUserRef = database.getReference("Users").child(uid);
         UsersReference = database.getReference("Users");
-
         User_RecordReference = database.getReference("User-Records").child(uid);
         RecordReference = database.getReference("Records");
 
@@ -85,10 +84,15 @@ public class RecordsFragment extends DialogFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        FirebaseRecyclerOptions<patient> options1 = new FirebaseRecyclerOptions.Builder<patient>().setQuery(UsersReference.orderByChild("isDoc").equalTo("false"), patient.class).build();
+
+        FirebaseRecyclerOptions<patient> options1 = new FirebaseRecyclerOptions.Builder<patient>()
+                .setQuery(UsersReference.orderByChild("isDoc").equalTo("false"), patient.class).build();
+
         patientAdapter = new PatientAdapter(options1);
 
-        FirebaseRecyclerOptions<record> options2 = new FirebaseRecyclerOptions.Builder<record>().setIndexedQuery(User_RecordReference, RecordReference, record.class).build();
+        FirebaseRecyclerOptions<record> options2 = new FirebaseRecyclerOptions.Builder<record>()
+                .setIndexedQuery(User_RecordReference, RecordReference, record.class).build();
+
         recordAdapter = new RecordAdapter(options2);
 
 
@@ -102,8 +106,6 @@ public class RecordsFragment extends DialogFragment {
                 //sino, significa que la tarea se cumple y podemos seguir
                 //si
                 else if (Boolean.parseBoolean(Objects.requireNonNull((Objects.requireNonNull(task.getResult())).getValue(patient.class)).getIsDoc())) {
-                    // UsersReference.orderByChild("isDoc").equalTo(false);
-                    //UsersReference.orderByChild("isDoc").
                     TextView Nombre = v.findViewById(R.id.lbl_date);
                     TextView FechaNac = v.findViewById(R.id.lbl_heartRate);
                     TextView Peso = v.findViewById(R.id.lbl_oxi_sat);

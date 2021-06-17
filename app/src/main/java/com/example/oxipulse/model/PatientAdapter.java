@@ -30,7 +30,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
     public PatientAdapter(@NonNull FirebaseRecyclerOptions<patient> options) {
         super(options);
     }
-    //int y,m,d;
+     int y,m,d;
      private final String UID = "UID";
 
     public int getAge(int year, int month, int dayOfMonth) {
@@ -63,8 +63,9 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
         holder.nombre.setText(fullname);
         holder.edad.setText(model.getBirthdate());
         holder.peso.setText(model.getWeight());
-        holder.uid=model.getId();
         holder.estatura.setText(model.getHeight());
+
+        holder.uid=model.getId();
 
          holder.itemView.setOnClickListener(new View.OnClickListener() {
              @Override
