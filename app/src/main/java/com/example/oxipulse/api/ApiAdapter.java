@@ -20,8 +20,9 @@ public class ApiAdapter {
         // Asociamos el interceptor a las peticiones
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(logging);
-        httpClient.connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60,TimeUnit.SECONDS);
+        httpClient.connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(300,TimeUnit.SECONDS);
+
 
         //direccion de nuestra API
         String baseUrl = "https://oxipulse.herokuapp.com/";

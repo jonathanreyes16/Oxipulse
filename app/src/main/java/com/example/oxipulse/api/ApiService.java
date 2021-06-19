@@ -28,8 +28,6 @@ public interface ApiService {
     @POST("upload")
     Call<EvalResponse> postEvalCsv(
             @Part MultipartBody.Part file
+            //@Part("file") MultipartBody.Part file
             );
-
-
-
 }
