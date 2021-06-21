@@ -98,7 +98,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         et_oxigenSat.requestFocus();
                         et_heartRate.setText("");
                         et_oxigenSat.setText("");
-
                     }
                 });
         Dialog d = alertDialogBuilder.create();
@@ -160,7 +159,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         ref2=Database.getReference("User-Records");
         uid=user.getUid();
 
-
         HashMap<String,String> hashMap = new HashMap<>();
         hashMap.put("date",date);
         hashMap.put("tag",response.body().getData().get(0).getCodigo());
@@ -182,8 +180,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         });
 
     }
-
-
 
     @Override
     public void onFocusChange(View view, boolean b) {
