@@ -80,7 +80,9 @@ public class RecordsFragment extends DialogFragment {
 
         RecyclerView recyclerView =  v.findViewById(R.id.datarecycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+
 
 
         FirebaseRecyclerOptions<patient> options1 = new FirebaseRecyclerOptions.Builder<patient>()
@@ -112,7 +114,6 @@ public class RecordsFragment extends DialogFragment {
                     FechaNac.setText(R.string.fecha_de_nacimiento);
                     Peso.setText(R.string.peso);
                     Estatura.setText(R.string.estatura);
-
                     recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
                     recyclerView.setAdapter(patientAdapter);
 

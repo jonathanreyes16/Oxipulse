@@ -62,4 +62,6 @@
     <string name="header_label">Etiqueta</string>
     <string name="header_heartRate">Ritmo\nCardiaco</string>
     <string name="health_personnel">Personal De Salud</string>
+    <string name="CSV_Button">Subir CSV</string>
+    <string name="Select_Patient">Seleccione el paciente para evaluar</string>
 </resources>
