@@ -46,6 +46,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +64,10 @@ import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -272,71 +276,101 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             }
         };
     }
+
+
     private void uploadFile(Uri file,Dialog d, ActivityResult result){
 
+        OkHttpClient client = new OkHttpClient();
+        DocumentFile f = DocumentFile.fromSingleUri(getContext(),result.getData().getData());
+        MediaType mediaType = MediaType.parse("multipart/form-data; boundary=---011000010111000001101001");
+        RequestBody body = RequestBody.create(mediaType, "-----011000010111000001101001\r\nContent-Disposition:" +
+                " form-data;" +
+                " name=\"file\"; " +
+                "filename="+f.getName()+"\r\nContent-Type: text/csv" +
+                "\r\n\r\n\r\n-----011000010111000001101001--\r\n");
+        Request request = new Request.Builder()
+                .url("https://oxipulse.herokuapp.com/upload")
+                .post(body)
+                .addHeader("content-type", "multipart/form-data; boundary=---011000010111000001101001")
+                .build();
+
+        try {
+            Gson gson = new Gson();
+            //okhttp3.Response response =
+            //EvalResponse er = new EvalResponse();
+            Call<EvalResponse> evalResponseCall =client.newCall(request);
+            ResponseBody responseBody = client.newCall(request).execute().body();
+            EvalResponse evalResponse = gson.fromJson(responseBody.toString(),EvalResponse.class);
+
+           // evalResponse.getData().g
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //Intent da = result.getData();
-        DocumentFile f = DocumentFile.fromSingleUri(getContext(),file);
+        //DocumentFile f = DocumentFile.fromSingleUri(getContext(),result.getData().getData());
         //oast.makeText(getContext(), file.getScheme().toString(), Toast.LENGTH_SHORT).show();
         //File file4 = new File(f.getName());
         //File file5 = new File(getReal);
-        //File file = new File(f.getName());
+        //File file1 = new File(f.getName());
         //Log.d("ERROR",f.getName());
+        //f.getName();
         //ApiService service = ApiAdapter.getApiService().
-        RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"),f.getName());
+       // RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"),f.getName());
         //RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"),f.getName());
         //RequestBody.create(MediaType.parse("application/octet-stream"),file.getName());
-       MultipartBody body = new MultipartBody.Builder("12345")
-               .addPart(stripLength(requestFile))
-               .build();
+       //MultipartBody body = new MultipartBody.Builder("12345").addPart(stripLength(requestFile)).build();
        // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),body);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),stripLength(requestFile));
+       // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);
         //MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);
         //MultipartBody.Part.createFormData();
 
 
-       // Toast.makeText(getContext(), f.getName() +"  2"+f.getName(), Toast.LENGTH_SHORT).show();
+       Toast.makeText(getContext(), f.getName() +"  2"+f.getUri(), Toast.LENGTH_SHORT).show();
 
-        Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(fileToUpload);
-        evalResponseCall.enqueue(new Callback<EvalResponse>() {
-            @Override
-            public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
-                //si la respuesta se obtiene
-                if (response.isSuccessful()) {
-                    //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
-                    switch (response.body().getData().get(0).getCodigo()) {
-                        case "Verde":
+       //Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(fileToUpload);
+       //valResponseCall.enqueue(new Callback<EvalResponse>() {
+       //   @Override
+       //   public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+       //       //si la respuesta se obtiene
+       //       if (response.isSuccessful()) {
+       //           //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
+       //           switch (response.body().getData().get(0).getCodigo()) {
+       //               case "Verde":
 
-                            triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etverde, null));
-                            tMensajeTriage.setText(R.string.eval_res_green);
-                            break;
-                        case "amarillo":
-                            triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etamar, null));
-                            tMensajeTriage.setText(R.string.eval_res_yellow);
-                            break;
-                        case "naranja":
-                            triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etnaranja, null));
-                            tMensajeTriage.setText(R.string.eval_res_orange);
-                            break;
-                        case "rojo":
-                            triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etrojo, null));
-                            tMensajeTriage.setText(R.string.eval_res_red);
-                            break;
-                    }
-                    Log.d("ERROR", "Response"+ response.toString());
+       //                   triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etverde, null));
+       //                   tMensajeTriage.setText(R.string.eval_res_green);
+       //                   break;
+       //               case "amarillo":
+       //                   triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etamar, null));
+       //                   tMensajeTriage.setText(R.string.eval_res_yellow);
+       //                   break;
+       //               case "naranja":
+       //                   triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etnaranja, null));
+       //                   tMensajeTriage.setText(R.string.eval_res_orange);
+       //                   break;
+       //               case "rojo":
+       //                   triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etrojo, null));
+       //                   tMensajeTriage.setText(R.string.eval_res_red);
+       //                   break;
+       //           }
+       //           Log.d("ERROR", "Response"+ response.toString());
 
-                    //Guardar resultado en base de datos
-                   // SaveEvalCsv(response,);
-                    d.show();
-                    save_eval(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EvalResponse> call, Throwable t) {
-                Log.e("ERROR",t.getMessage(),t);
-                Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-            }
-        });
+       //           //Guardar resultado en base de datos
+       //          // SaveEvalCsv(response,);
+       //           d.show();
+       //           save_eval(response);
+       //       }
+       //   }
+//
+       //     @Override
+       //     public void onFailure(Call<EvalResponse> call, Throwable t) {
+       //         Log.e("ERROR",t.getMessage(),t);
+       //         Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+       //     }
+       // });
 
        // Toast.makeText(getContext(), "File Selected: " + uri.getPath().toString(), Toast.LENGTH_SHORT).show();
 
