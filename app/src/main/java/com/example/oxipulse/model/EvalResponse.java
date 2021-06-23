@@ -12,6 +12,10 @@ public class EvalResponse implements Serializable {
     @SerializedName("data")
     private List<Data> data= null;
 
+    public EvalResponse(List<Data> data) {
+        this.data = data;
+    }
+
     //getter and setter
     public List<Data> getData() {
         return data;
