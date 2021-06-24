@@ -62,16 +62,16 @@
         app:layout_constraintVertical_bias="0.409" />
 
     <TextView
-        android:id="@+id/lbl_forgot_pass"
-        android:layout_width="145dp"
+        android:id="@+id/lkforgot_pass"
+        android:layout_width="181dp"
         android:layout_height="22dp"
-        android:linksClickable="true"
-        android:text="@string/pforget"
+        android:layout_marginBottom="332dp"
+        android:text="Olvide mi contraseña"
+        android:textAlignment="center"
         android:textColor="@color/hipervinculo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.89"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itext_pass_login"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintStart_toStartOf="parent"></TextView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
