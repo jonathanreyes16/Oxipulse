@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,16 +39,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 email = edtEmail.getText().toString();
-                if (email.isEmpty()) {
-                    Toast.makeText(ResetPasswordActivity.this, "Debe ingresar el Email", Toast.LENGTH_SHORT).show();
-                } else {
-
+                if (!email.isEmpty()) {
                     mDialog.setMessage("Procesando porfavor espere");
                     mDialog.setCanceledOnTouchOutside(false);
                     mDialog.show();
                     resetPassword();
                 }
-                mDialog.dismiss();
+                else {
+
+                    Toast.makeText(ResetPasswordActivity.this, "Debe ingresar el Email", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
         });
@@ -61,11 +63,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
                     Toast.makeText(ResetPasswordActivity.this, "Se ha enviado un correo para reestablecer tu contraseña", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ResetPasswordActivity.this,LoginActivity.class));
                 } else {
                     Toast.makeText(ResetPasswordActivity.this, "Ese Email no esta registrado", Toast.LENGTH_SHORT).show();
 
                 }
-
+                mDialog.dismiss();
             }
         });
 
