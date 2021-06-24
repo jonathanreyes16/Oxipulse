@@ -112,7 +112,9 @@ public class ProfileFragment extends Fragment {
                         if ( p.getBirthdate()!=null && p.getWeight()!=null && p.getHeight()!=null
                                 && p.getGender()!=null &&p.getAsma()!=null && p.getDiabetes()!=null && p.getHipertension()!=null
                                 ){
+
                             tBirthdate.setText(p.getBirthdate());
+
                             tWeight.setText(p.getWeight());
                             tHeight.setText(p.getHeight());
                             if (p.getGender().equals("Hombre")) {
@@ -197,12 +199,15 @@ public class ProfileFragment extends Fragment {
         btn_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //se crea un nuevo fragmento de tipo Datepicker
-                DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+               DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
                     //se sobrecarga su metodo de onDateSet
+
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         //la fecha seleccionada se asigna a la variable selectedDate
+
                         String selectedDate=dayOfMonth+"/"+(month+1)+"/"+year;
                         //Al TextView birthdate se le asigna el valor de la fecha seleccionada
                         tBirthdate.setText(selectedDate);
