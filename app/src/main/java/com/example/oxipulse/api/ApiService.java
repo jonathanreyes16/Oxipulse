@@ -28,8 +28,8 @@ public interface ApiService {
     @Multipart
     @POST("upload")
     Call<EvalResponse> postEvalCsv(
-            @Part("file") RequestBody file
-            //@Part("file") MultipartBody.Part file
+            //@Part("file") RequestBody file
+            @Part MultipartBody.Part file
             );
     //Call<MyResponse> uploadImage(@Part("image\"; filename=\"myfile.jpg\" ") RequestBody file, @Part("desc") RequestBody desc);
 
