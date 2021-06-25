@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -15,8 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -25,48 +22,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 
 import com.example.oxipulse.R;
 import com.example.oxipulse.api.ApiAdapter;
-import com.example.oxipulse.model.Data;
 import com.example.oxipulse.model.EvalResponse;
+import com.example.oxipulse.model.SpinnerPatientAdapter;
 import com.example.oxipulse.model.patient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -75,15 +67,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,23 +89,20 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     TextInputEditText et_oxigenSat,et_heartRate;
     TextInputLayout etl_oxigen,etl_heart;
     Button btn_eval,btn_csv;
-    String oxi,sat;
-    private static Uri contentUri = null;
-    String uid,date;
-    String isD;
-    ActivityResult r;
-    File fileToUpload = null;
-    TextView tv,lbl_selectPatient ;
+    String oxi,sat,uid,date,isD;
+
+    TextView tv,lbl_selectPatient,tMensajeTriage,lbl_hint_oxi,lbl_hint_rate;
     Uri uri;
     FirebaseUser user;
     FirebaseDatabase Database;
     DatabaseReference refdoc, ref,ref2;
-    Spinner spinner,namesSpinner ;
+    Spinner namesSpinner;
     private static final int PICK_PDF_FILE = 2;
+    private static Uri contentUri = null;
     View triagealert;
     ImageView triageColor;
-    TextView tMensajeTriage;
     Dialog d;
+    SpinnerPatientAdapter spinnerPatientAdapter;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -127,18 +111,25 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         //evaluationViewModel = new ViewModelProvider(this).get(EvaluationViewModel.class);
         //se infla la vista del fragment
         View root = inflater.inflate(R.layout.fragment_evaluation, container, false);
+
+        lbl_selectPatient=root.findViewById(R.id.tv_Select_Patient);
+        namesSpinner =root.findViewById(R.id.spinnerSelectPatient);
+
         et_oxigenSat=root.findViewById(R.id.text_input_oxigen);
         et_heartRate=root.findViewById(R.id.text_input_heartrate);
-        btn_eval= root.findViewById(R.id.button_evaluation);
         etl_heart=root.findViewById(R.id.text_input_layout_heartrate);
         etl_oxigen=root.findViewById(R.id.text_input_layout_oxigen);
+        lbl_hint_oxi=root.findViewById(R.id.lbl_hint_heartrate);
+        lbl_hint_rate=root.findViewById(R.id.lbl_hint_oxigen);
+
         tv = root.findViewById(R.id.textView2);
+
         btn_csv =root.findViewById(R.id.btn_input_csv);
-        lbl_selectPatient=root.findViewById(R.id.tv_Select_Patient);
-        spinner=root.findViewById(R.id.spinnerSelectPatient);
+        btn_eval= root.findViewById(R.id.button_evaluation);
+
         (root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
         (root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
-        user= FirebaseAuth.getInstance().getCurrentUser();
+
 
 
         //final ImageView triageColor = (ImageView)
@@ -147,6 +138,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         tMensajeTriage = triagealert.findViewById(R.id.tv_mensaje);
 
         //firebase logic
+        user= FirebaseAuth.getInstance().getCurrentUser();
         Database= FirebaseDatabase.getInstance();
         uid=user.getUid();
 
@@ -176,45 +168,59 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             // Permission has already been granted
         }
 
+        //se checa si es doctor y si es doctor se muestra el boton de subir csv
+        refdoc = Database.getReference("Users").child(uid);
+        refdoc.get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()){
+                Log.e("Error", Objects.requireNonNull(task.getException()).toString());
+            }
+            else {
+                isD= task.getResult().getValue(patient.class).getIsDoc();
+                if (isD.equals("true")){
+                    btn_csv.setVisibility(View.VISIBLE);
+                    fillPatientSpinners();
+                    lbl_selectPatient.setVisibility(View.VISIBLE);
+                    Log.d ("D",  task.getResult().toString());
+                }
+                else {
+                    oxirateVisible();
+                    btn_eval.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
                 .setView(triagealert)
                 .setTitle("Triage")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Evento despues de dar ok
-                        et_oxigenSat.requestFocus();
-                        et_heartRate.setText("");
-                        et_oxigenSat.setText("");
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    //Evento despues de dar ok
+                    et_oxigenSat.requestFocus();
+                    et_heartRate.setText("");
+                    et_oxigenSat.setText("");
 
 
-                    }
                 });
         d = alertDialogBuilder.create();
 
+        //Se crea un activityResultLauncher que toma un intent y espera su resultado.
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
+                    //si el codigo de respuesta del resultado es RESULT_OK
                     if (result.getResultCode() == RESULT_OK) {
                         assert result.getData() != null;
+                        btn_eval.setEnabled(true);
+                        //se le asigna al uri el uri del archivo seleccionado
                         uri = result.getData().getData();
-                            //fileToUpload = getFile(result);
-                            //File f = new File(result.getData().getData().getPath());
-                            //File f = new File(uri.getPath());
-                           // DocumentFile documentFile = DocumentFile.fromSingleUri(getContext(),uri);
-                           // File f = new File(documentFile.getUri().toString());
-                             //File f = new File(documentFile.getName());
-                            //r = result;
-                            //fileToUpload = f;
-                           // tv.setText(fileToUpload.getPath());
-                        // tv.setVisibility(View.VISIBLE);
-
-                        fillPatientSpinners();
+                        
+                        //se llena el spinner con los datos de los pacientes
+                        //se ocultan los campos de oxi y saturacion y se muestra el spinner para
+                        //seleccionar el usuario al que se le asignara la lectura
                         CSVVisibilityAfterselectON();
-                            ///uploadFile(result);
+
                         }
 
                 });
@@ -224,90 +230,123 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         btn_eval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (uri!=null){
+                //el uri se asigna al completar el intent y que el resultado sea RESULT_OK,
+                // entonces si no es nulo significa que se escojio un archivo CSV
+                if (uri != null) {
+                    //se sube el archivo con la funcion UploadFile
                     uploadFile(uri);
+
                     CSVVisibilityAfterselectOFF();
-                }
-                else {
+                } else {
+
+                    //si es nulo se introdujo un valor a los campos de oxi y sat
                     DirectEval();
-                    btn_eval.setEnabled(false);
-                    et_heartRate.clearFocus();
-                    et_oxigenSat.clearFocus();
-                    oxi=et_oxigenSat.getText().toString();
-                    sat=et_heartRate.getText().toString();
-                    Call<EvalResponse> responseCall = ApiAdapter.getApiService().getEval(oxi,sat);
-                    responseCall.enqueue(new Callback<EvalResponse>() {
-                        @Override
-                        public void onResponse(@NotNull Call<EvalResponse> call, @NotNull Response<EvalResponse> response) {
-                            //si la respuesta se obtiene
-                            if (response.isSuccessful()){
-                                //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
-                                switch (response.body().getData().get(0).getCodigo()){
-                                    case "Verde":
-                                        triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etverde,null));
-                                        tMensajeTriage.setText(R.string.eval_res_green);
-                                        break;
-                                    case "amarillo":
-                                        triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etamar,null));
-                                        tMensajeTriage.setText(R.string.eval_res_yellow);
-                                        break;
-                                    case "naranja":
-                                        triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etnaranja,null));
-                                        tMensajeTriage.setText(R.string.eval_res_orange);
-                                        break;
-                                    case "rojo":
-                                        triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etrojo,null));
-                                        tMensajeTriage.setText(R.string.eval_res_red);
-                                        break;
-                                }
-                                d.show();
-                                //Guardar resultado en base de datos
-                                save_eval(response);
-                            }
-                        }
-                        //si la respuesta es incorrecta
-                        @Override
-                        public void onFailure(@NotNull Call<EvalResponse> call, @NotNull Throwable t) {
-                            Log.e("Error",t.getMessage());
-                        }
-                    });
-                }
-                }
-
-        });
-
-        refdoc = Database.getReference("Users").child(uid);
-        refdoc.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()){
-                    Log.e("Error", Objects.requireNonNull(task.getException()).toString());
-                }
-                else {
-                    //patient p = Objects.requireNonNull(task.getResult()).getValue();
-                    isD= task.getResult().getValue(patient.class).getIsDoc();
-                    if (isD.equals("true")){
-                        btn_csv.setVisibility(View.VISIBLE);
-                        Log.d ("D",  task.getResult().toString());
-                    }
-
                 }
             }
+
         });
 
+
         btn_csv.setOnClickListener(v -> {
+            //al dar clic se crea un intent.ACTION_GET_CONTENT que
+            //abre un explorador de archivos para seleccionar el archivo a subir
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("text/*");
+            //se envia a un activity result launcher donde espera la respuesta
             someActivityResultLauncher.launch(intent);
 
         });
         return root;
     }
 
-    private void DirectEval() {
+    private void oxirateVisible() {
+        lbl_hint_rate.setVisibility(View.VISIBLE);
+        lbl_hint_oxi.setVisibility(View.VISIBLE);
+        etl_heart.setVisibility(View.VISIBLE);
+        etl_oxigen.setVisibility(View.VISIBLE);
+        et_oxigenSat.setVisibility(View.VISIBLE);
+        et_heartRate.setVisibility(View.VISIBLE);
     }
 
+
+    private void DirectEval() {
+
+        btn_eval.setEnabled(false);
+        et_heartRate.clearFocus();
+        et_oxigenSat.clearFocus();
+        oxi=et_oxigenSat.getText().toString();
+        sat=et_heartRate.getText().toString();
+        Call<EvalResponse> responseCall = ApiAdapter.getApiService().getEval(oxi,sat);
+        responseCall.enqueue(new Callback<EvalResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<EvalResponse> call, @NotNull Response<EvalResponse> response) {
+                //si la respuesta se obtiene
+                if (response.isSuccessful()){
+                    //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
+                   showDialogOnResponse(response);
+                    //Guardar resultado en base de datos
+                    save_eval(response);
+
+                }
+            }
+            //si la respuesta es incorrecta
+            @Override
+            public void onFailure(@NotNull Call<EvalResponse> call, @NotNull Throwable t) {
+                Log.e("Error",t.getMessage());
+                btn_eval.setEnabled(true);
+            }
+        });
+    }
+    private void uploadFile(Uri file) {
+
+        File f = getFile(getContext(),file);
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part.createFormData();
+
+
+        Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(body);
+
+        evalResponseCall.enqueue(new Callback<EvalResponse>() {
+            @Override
+            public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+                if (response.isSuccessful()){
+                    //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
+                    showDialogOnResponse(response);
+                    //Guardar resultado en base de datos
+                   SaveEvalCsv(response,uid);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EvalResponse> call, Throwable t) {
+                Log.e("Error",t.getMessage());
+            }
+        });
+
+    }
+    private void showDialogOnResponse(Response<EvalResponse> response){
+        switch (response.body().getData().get(0).getCodigo()){
+            case "Verde":
+                triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etverde,null));
+                tMensajeTriage.setText(R.string.eval_res_green);
+                break;
+            case "amarillo":
+                triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etamar,null));
+                tMensajeTriage.setText(R.string.eval_res_yellow);
+                break;
+            case "naranja":
+                triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etnaranja,null));
+                tMensajeTriage.setText(R.string.eval_res_orange);
+                break;
+            case "rojo":
+                triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etrojo,null));
+                tMensajeTriage.setText(R.string.eval_res_red);
+                break;
+        }
+        d.show();
+        btn_eval.setEnabled(true);
+    }
 
 
 
@@ -317,7 +356,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
         ref=Database.getReference("Records").push();
         ref2=Database.getReference("User-Records");
-
 
 
         HashMap<String,String> hashMap = new HashMap<>();
@@ -370,9 +408,47 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 Log.e("error", "Error saving record", task.getException());
             }
         });
+    }
 
+    private void fillPatientSpinners() {
+        namesSpinner.setVisibility(View.VISIBLE);
+
+        ref=Database.getReference("Users");
+        ref.orderByChild("isDoc").equalTo("false").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                final List<patient> patientsList = new ArrayList<patient>();
+                for (DataSnapshot patients: snapshot.getChildren()) {
+                    patient p = patients.getValue(patient.class);
+                    patientsList.add(p);
+                }
+                spinnerPatientAdapter= new SpinnerPatientAdapter(getContext(),R.layout.textview, patientsList);
+                namesSpinner.setAdapter(spinnerPatientAdapter);
+                namesSpinner.setSelection(spinnerPatientAdapter.NO_SELECTION,false);
+                namesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        patient p = spinnerPatientAdapter.getItem(position);
+                        uid=p.getId();
+                        oxirateVisible();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
     }
+
 
 
     @Override
@@ -398,240 +474,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         }
     }
 
-    private void uploadFile(Uri file) {
 
-        //uploadFile(File file)
-        //   OkHttpClient client = new OkHttpClient();
-        //   DocumentFile f = DocumentFile.fromSingleUri(getContext(),result.getData().getData());
-        //   MediaType mediaType = MediaType.parse("multipart/form-data; boundary=---011000010111000001101001");
-        //   RequestBody body = RequestBody.create(mediaType, "-----011000010111000001101001\r\nContent-Disposition:" +
-        //           " form-data;" +
-        //           " name=\"file\"; " +
-        //           "filename="+f.getName()+"\r\nContent-Type: text/csv" +
-        //           "\r\n\r\n\r\n-----011000010111000001101001--\r\n");
-        //   Request request = new Request.Builder()
-        //           .url("https://oxipulse.herokuapp.com/upload")
-        //           .post(body)
-        //           .addHeader("content-type", "multipart/form-data; boundary=---011000010111000001101001")
-        //           .build();
-
-        //   try {
-        //       Gson gson = new Gson();
-        //okhttp3.Response response =
-        //          //EvalResponse er = new EvalResponse();
-        //    Call<EvalResponse> evalResponseCall =client.newCall(request);
-        //    ResponseBody responseBody = client.newCall(request).execute().body();
-        //    EvalResponse evalResponse = gson.fromJson(responseBody.toString(),EvalResponse.class);
-
-        // evalResponse.getData().g
-
-        //  } catch (IOException e) {
-        //      e.printStackTrace();
-        //  }
-        //Intent da = result.getData();
-        //String[] arr = {MediaStore.Images.Media.DATA};
-        //Cursor cursor = getContext().getContentResolver().query(uri, arr, null, null, null);
-        //if (cursor != null) {
-        //    int img_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        //    cursor.moveToFirst();
-        //    String img_path = cursor.getString(img_index);
-        //    File file15 = new File(img_path); //Get File
-        //    cursor.close(); //Release resources
-        //} else {
-        //    Toast.makeText(getContext(), "Cursor:null", Toast.LENGTH_SHORT).show();
-        //}
-        File f = getFile(getContext(),file);
-      // File f = getFile(getContext(),file);//new File(Objects.requireNonNull(FileUtils.getPath(file))); //getFile(getContext(),file);
-       //DocumentFile f = DocumentFile.fromSingleUri(getContext(),file );
-       // //oast.makeText(getContext(), file.getScheme().toString(), Toast.LENGTH_SHORT).show();
-       // File f13 = new File(result.getData().getData().getPath());
-       // Uri uriii = Uri.fromFile(f13);
-       // File file4 = ;
-
-
-        //File f21 = new File(Objects.requireNonNull(ContentUriUtil.INSTANCE.getFilePath(getContext(), result.getData().getData()))) ;
-        //File file5 = new File(getReal);
-        //File file1 = f.createFile("text/csv","file");
-        //Log.d("ERROR",f.getName());
-        //f.getName();
-//
-
-        //ApiService service = ApiAdapter.getApiService().postEvalCsv()
-
-
-      //RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
-
-      //RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"),f.getName())
-        // RequestBody.create(MediaType.parse("application/octet-stream"),file.getName());
-        //RequestBody body = new MultipartBody.Builder()
-          //      .setType(MultipartBody.FORM)
-            //    .addFormDataPart("file",f.getPath(),requestFile)
-              //  .build();
-
-        RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part.createFormData();
-
-
-       //RequestBody formBody = new MultipartBody.Builder()
-       //        .setType(MultipartBody.FORM)
-       //        .addFormDataPart("file",f.getPath(),
-
-       //                RequestBody
-       //                .create(MediaType.parse("application/octet-stream"),
-       //                        new File(f.getPath())))
-       //        .build();
-
-        Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(body);
-        evalResponseCall.enqueue(new Callback<EvalResponse>() {
-               @Override
-               public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
-                   if (response.isSuccessful()){
-                       //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
-                       switch (response.body().getData().get(0).getCodigo()){
-                           case "Verde":
-                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etverde,null));
-                               tMensajeTriage.setText(R.string.eval_res_green);
-                               break;
-                           case "amarillo":
-                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etamar,null));
-                               tMensajeTriage.setText(R.string.eval_res_yellow);
-                               break;
-                           case "naranja":
-                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etnaranja,null));
-                               tMensajeTriage.setText(R.string.eval_res_orange);
-                               break;
-                           case "rojo":
-                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etrojo,null));
-                               tMensajeTriage.setText(R.string.eval_res_red);
-                               break;
-                       }
-                       d.show();
-                       //Guardar resultado en base de datos
-
-                       SaveEvalCsv(response,spinner.getSelectedItem().toString());
-                   }
-               }
-
-               @Override
-               public void onFailure(Call<EvalResponse> call, Throwable t) {
-                   Log.e("Error",t.getMessage());
-               }
-           });
-
-
-                // OkHttpClient client = new OkHttpClient();
-                // try {
-                //     this.getContext().getContentResolver().openInputStream(file).read();
-                // } catch (FileNotFoundException e) {
-                //     e.printStackTrace();
-                // } catch (IOException e) {
-                //     e.printStackTrace();
-                // }
-                // {
-                //     // read bytes and create requestbody here
-                // }\
-
-
-
-
-/*
-         //   RequestBody requestFile = RequestBody.create(MediaType.parse(getContext().getContentResolver().getType(file)), f.getName());
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(100, TimeUnit.SECONDS)
-                .readTimeout(100,TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .build();
-
-
-        MediaType mediaType = MediaType.parse("text/plain");
-
-
-        RequestBody formBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file",f.getPath(),RequestBody
-                        .create(MediaType.parse("application/octet-stream"),
-                                new File(f.getPath())))
-                .build();
-
-        Request request = new Request.Builder()
-                .url("https://oxipulse.herokuapp.com/upload")
-                .post(formBody)
-                .build();
-
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                Log.e("ERROR", e.getMessage(), e);
-                //Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                //si la respuesta se obtiene
-
-                   String jsonData = response.body().string();
-
-                   Gson gson = new Gson();
-                   Log.i("INFO", "onResponse: "+jsonData.toString());
-
-                   //response.
-                   Type ListType = new TypeToken<ArrayList<EvalResponse>>(){}.getType();
-                   Type ListType1 = new TypeToken<EvalResponse>(){}.getType();
-
-                   Type DataType = new TypeToken<Data>(){}.getType();
-
-
-                   Data evalResponseList = gson.fromJson(jsonData,DataType);
-                   EvalResponse eva = gson.fromJson(jsonData,EvalResponse.class);
-                   //List<EvalResponse> yourClassList = getList(response.body().string(),EvalResponse.class);
-                switch (eva.getData().get(0).getCodigo()){
-                       case "Verde":
-                           triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etverde, null));
-                           tMensajeTriage.setText(R.string.eval_res_green);
-                           break;
-                       case "amarillo":
-                           triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etamar, null));
-                           tMensajeTriage.setText(R.string.eval_res_yellow);
-                           break;
-                       case "naranja":
-                           triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etnaranja, null));
-                           tMensajeTriage.setText(R.string.eval_res_orange);
-                           break;
-                       case "rojo":
-                           triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.etrojo, null));
-                           tMensajeTriage.setText(R.string.eval_res_red);
-                           break;
-                   }
-
-                   //d.show();
-
-               //    String res= response.body().string();
-               //    List<EvalResponse> evalResponseList = new EvalResponse();
-               //    EvalResponse evalResponse =
-               //    //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
-
-               //
-               //    }
-               //    Log.d("ERROR", "Response" + response.toString());
-
-               //    //Guardar resultado en base de datos
-               //    // SaveEvalCsv(response,);
-               //    d.show();
-                }
-
-
-        });
-
-
- */
-    }
-    private void fillPatientSpinners() {
-
-
-    }
 
 
     private void CSVVisibilityAfterselectON() {
@@ -640,7 +483,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         etl_oxigen.setVisibility(View.INVISIBLE);
         etl_heart.setVisibility(View.INVISIBLE);
         lbl_selectPatient.setVisibility(View.VISIBLE);
-        spinner.setVisibility(View.VISIBLE);
+        namesSpinner.setVisibility(View.VISIBLE);
     }
     private void CSVVisibilityAfterselectOFF() {
         et_heartRate.setVisibility(View.VISIBLE);
@@ -648,7 +491,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         etl_oxigen.setVisibility(View.VISIBLE);
         etl_heart.setVisibility(View.VISIBLE);
         lbl_selectPatient.setVisibility(View.INVISIBLE);
-        spinner.setVisibility(View.VISIBLE);
+        namesSpinner.setVisibility(View.VISIBLE);
     }
 
 

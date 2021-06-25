@@ -18,10 +18,10 @@ public class SpinnerPatientAdapter extends ArrayAdapter<patient> {
     // el contexto en el que esta
     private Context context;
     // los valores del spinner
-    private patient[] values;
+    private List<patient> values;
 
 
-    public SpinnerPatientAdapter(@NonNull Context context, int resource, @NonNull patient[] values) {
+    public SpinnerPatientAdapter(@NonNull Context context, int resource, @NonNull List<patient> values) {
         super(context, resource, values);
         this.context=context;
         this.values=values;
@@ -29,13 +29,13 @@ public class SpinnerPatientAdapter extends ArrayAdapter<patient> {
 
     @Override
     public int getCount() {
-        return values.length;
+        return values.size();
     }
 
     @Nullable
     @Override
     public patient getItem(int position) {
-        return values[position];
+        return values.get(position);
     }
 
     @Override
@@ -47,7 +47,8 @@ public class SpinnerPatientAdapter extends ArrayAdapter<patient> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         TextView name = (TextView) super.getView(position, convertView, parent);
-        name.setText(values[position].getFirstName());
+        String string = values.get(position).getFirstName() + " " + values.get(position).getLastName();
+        name.setText(string);
         return name;
     }
 
@@ -56,7 +57,9 @@ public class SpinnerPatientAdapter extends ArrayAdapter<patient> {
        View v = super.getDropDownView(position, convertView, parent);
         TextView name = ((TextView) v);
        name.setTextColor(Color.BLACK);
-       name.setText(values[position].getFirstName());
+        String string = values.get(position).getFirstName() + " " + values.get(position).getLastName() + " "+ values.get(position).getBirthdate();
+
+        name.setText(string);
         return name;
     }
 }
