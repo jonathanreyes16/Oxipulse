@@ -108,12 +108,12 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     String isD;
     ActivityResult r;
     File fileToUpload = null;
-    TextView tv;
+    TextView tv,lbl_selectPatient ;
     Uri uri;
     FirebaseUser user;
     FirebaseDatabase Database;
     DatabaseReference refdoc, ref,ref2;
-    Spinner spinner ;
+    Spinner spinner,namesSpinner ;
     private static final int PICK_PDF_FILE = 2;
     View triagealert;
     ImageView triageColor;
@@ -134,6 +134,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         etl_oxigen=root.findViewById(R.id.text_input_layout_oxigen);
         tv = root.findViewById(R.id.textView2);
         btn_csv =root.findViewById(R.id.btn_input_csv);
+        lbl_selectPatient=root.findViewById(R.id.tv_Select_Patient);
         spinner=root.findViewById(R.id.spinnerSelectPatient);
         (root.findViewById(R.id.text_input_heartrate)).setOnFocusChangeListener(this);
         (root.findViewById(R.id.text_input_oxigen)).setOnFocusChangeListener(this);
@@ -203,17 +204,16 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                             //fileToUpload = getFile(result);
                             //File f = new File(result.getData().getData().getPath());
                             //File f = new File(uri.getPath());
-                            DocumentFile documentFile = DocumentFile.fromSingleUri(getContext(),uri);
+                           // DocumentFile documentFile = DocumentFile.fromSingleUri(getContext(),uri);
                            // File f = new File(documentFile.getUri().toString());
-                             File f = new File(documentFile.getName());
-                            r = result;
-                            fileToUpload = f;
-                            tv.setText(fileToUpload.getPath());
-                            tv.setVisibility(View.VISIBLE);
-                            et_heartRate.setVisibility(View.INVISIBLE);
-                            et_oxigenSat.setVisibility(View.INVISIBLE);
-                            etl_oxigen.setVisibility(View.INVISIBLE);
-                            etl_heart.setVisibility(View.INVISIBLE);
+                             //File f = new File(documentFile.getName());
+                            //r = result;
+                            //fileToUpload = f;
+                           // tv.setText(fileToUpload.getPath());
+                        // tv.setVisibility(View.VISIBLE);
+
+                        fillPatientSpinners();
+                        CSVVisibilityAfterselectON();
                             ///uploadFile(result);
                         }
 
@@ -225,10 +225,12 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             @Override
             public void onClick(View v) {
 
-                if (fileToUpload!=null){
+                if (uri!=null){
                     uploadFile(uri);
+                    CSVVisibilityAfterselectOFF();
                 }
                 else {
+                    DirectEval();
                     btn_eval.setEnabled(false);
                     et_heartRate.clearFocus();
                     et_oxigenSat.clearFocus();
@@ -303,50 +305,98 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         return root;
     }
 
+    private void DirectEval() {
+    }
 
-    private void copyFileStream(File dest, Uri uri, Context context)
-            throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = context.getContentResolver().openInputStream(uri);
-            os = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
 
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
+
+
+    private void save_eval(Response<EvalResponse> response) {
+        date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
+        // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
+
+        ref=Database.getReference("Records").push();
+        ref2=Database.getReference("User-Records");
+
+
+
+        HashMap<String,String> hashMap = new HashMap<>();
+        hashMap.put("date",date);
+        hashMap.put("tag",response.body().getData().get(0).getCodigo());
+        hashMap.put("hr",sat);
+        hashMap.put("oxi",oxi);
+        hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
+        //hashMap.put("id",uid);
+
+        String key = ref.getKey();
+
+        ref.setValue(hashMap);
+        ref2.child(uid).child(key).setValue("true").addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Log.e("error", "Error saving record", task.getException());
+            }
+        });
+
+    }
+    private void SaveEvalCsv(Response<EvalResponse> response,String UID){
+        date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
+        // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
+
+        String d = UID;
+        ref=Database.getReference("Records").push();
+        ref2=Database.getReference("User-Records");
+
+
+
+        HashMap<String,String> hashMap = new HashMap<>();
+        hashMap.put("date",date);
+        hashMap.put("tag",response.body().getData().get(0).getCodigo());
+        hashMap.put("hr",sat);
+        hashMap.put("oxi",oxi);
+        hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
+        //hashMap.put("id",uid);
+
+        String key = ref.getKey();
+
+        ref.setValue(hashMap);
+        ref2.child(d).child(key).setValue("true").addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Log.e("error", "Error saving record", task.getException());
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (!b) {
+            switch (view.getId()) {
+                case R.id.text_input_heartrate:
+                    if (!TextUtils.isEmpty(et_heartRate.getText())) {
+                        if (!et_heartRate.getText().toString().contains(".")) {
+                            et_heartRate.setText(et_heartRate.getText().append(".0"));
+                        }
+                    }
+                    break;
+                case R.id.text_input_oxigen:
+                    if (!TextUtils.isEmpty(et_oxigenSat.getText())){
+                        if (!et_oxigenSat.getText().toString().contains(".")){
+                            et_oxigenSat.setText(et_oxigenSat.getText().append(".0"));
+                        }
+                    }
+                    break;
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            is.close();
-            os.close();
         }
     }
-  // private File getFile(ActivityResult result){
-
-  //     Intent da = result.getData();
-  //     //DocumentFile f = DocumentFile.fromSingleUri(getContext(),da.getData());  working
-  //     File file = new File(da.getData().getPath());
-  //     //File file = new File(f.getName());
-  //     //Log.d("ERROR",f.getName());
-  //     //File file12 = new File();
-  //     return file;
-  // }
-    private RequestBody stripLength(RequestBody delegate) {
-        return new RequestBody() {
-            @Override public @Nullable MediaType contentType() {
-                return delegate.contentType();
-            }
-
-            @Override public void writeTo(BufferedSink sink) throws IOException {
-                delegate.writeTo(sink);
-            }
-        };
-    }
-
 
     private void uploadFile(Uri file) {
 
@@ -457,7 +507,8 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                        }
                        d.show();
                        //Guardar resultado en base de datos
-                       save_eval(response);
+
+                       SaveEvalCsv(response,spinner.getSelectedItem().toString());
                    }
                }
 
@@ -577,6 +628,29 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
  */
     }
+    private void fillPatientSpinners() {
+
+
+    }
+
+
+    private void CSVVisibilityAfterselectON() {
+        et_heartRate.setVisibility(View.INVISIBLE);
+        et_oxigenSat.setVisibility(View.INVISIBLE);
+        etl_oxigen.setVisibility(View.INVISIBLE);
+        etl_heart.setVisibility(View.INVISIBLE);
+        lbl_selectPatient.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.VISIBLE);
+    }
+    private void CSVVisibilityAfterselectOFF() {
+        et_heartRate.setVisibility(View.VISIBLE);
+        et_oxigenSat.setVisibility(View.VISIBLE);
+        etl_oxigen.setVisibility(View.VISIBLE);
+        etl_heart.setVisibility(View.VISIBLE);
+        lbl_selectPatient.setVisibility(View.INVISIBLE);
+        spinner.setVisibility(View.VISIBLE);
+    }
+
 
     public <T> List<T> getList(String jsonArray, Class<T> EvalResponse) {
         Type typeOfT = TypeToken.getParameterized(List.class, EvalResponse).getType();
@@ -804,91 +878,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    private void save_eval(Response<EvalResponse> response) {
-        date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
-       // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
-
-        ref=Database.getReference("Records").push();
-        ref2=Database.getReference("User-Records");
-
-
-
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("date",date);
-        hashMap.put("tag",response.body().getData().get(0).getCodigo());
-        hashMap.put("hr",sat);
-        hashMap.put("oxi",oxi);
-        hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
-        //hashMap.put("id",uid);
-
-        String key = ref.getKey();
-
-        ref.setValue(hashMap);
-        ref2.child(uid).child(key).setValue("true").addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Log.e("error", "Error saving record", task.getException());
-            }
-        });
-
-    }
-    private void SaveEvalCsv(Response<EvalResponse> response,String UID){
-        date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
-        // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
-        String d = UID;
-        ref=Database.getReference("Records").push();
-        ref2=Database.getReference("User-Records");
-
-
-
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("date",date);
-        hashMap.put("tag",response.body().getData().get(0).getCodigo());
-        hashMap.put("hr",sat);
-        hashMap.put("oxi",oxi);
-        hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
-        //hashMap.put("id",uid);
-
-        String key = ref.getKey();
-
-        ref.setValue(hashMap);
-        ref2.child(d).child(key).setValue("true").addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Log.e("error", "Error saving record", task.getException());
-            }
-        });
-
-
-    }
-
-
-    @Override
-    public void onFocusChange(View view, boolean b) {
-        if (!b) {
-            switch (view.getId()) {
-                case R.id.text_input_heartrate:
-                    if (!TextUtils.isEmpty(et_heartRate.getText())) {
-                        if (!et_heartRate.getText().toString().contains(".")) {
-                            et_heartRate.setText(et_heartRate.getText().append(".0"));
-                        }
-                    }
-                    break;
-                case R.id.text_input_oxigen:
-                    if (!TextUtils.isEmpty(et_oxigenSat.getText())){
-                        if (!et_oxigenSat.getText().toString().contains(".")){
-                            et_oxigenSat.setText(et_oxigenSat.getText().append(".0"));
-                        }
-                    }
-                    break;
-
-            }
-        }
-    }
 
 
 }

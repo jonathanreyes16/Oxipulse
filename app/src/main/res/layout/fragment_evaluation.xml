@@ -118,6 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/bordes_redondos"
+            android:enabled="false"
             android:text="@string/Evaluation"
             android:textColor="@color/black"
             app:backgroundTint="@null"
