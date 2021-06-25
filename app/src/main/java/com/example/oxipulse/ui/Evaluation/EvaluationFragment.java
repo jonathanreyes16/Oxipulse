@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -50,6 +49,7 @@ import com.example.oxipulse.api.ApiAdapter;
 import com.example.oxipulse.api.ApiService;
 import com.example.oxipulse.api.ServiceGenerator;
 import com.example.oxipulse.model.EvalResponse;
+import com.example.oxipulse.model.FileUtils;
 import com.example.oxipulse.model.patient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -82,6 +82,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -90,6 +91,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,6 +107,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     private static final int REQUEST_CODE_FILE = 2;
     private static final int ACTIVITY_CHOOSE_FILE1 = 1;
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 12;
+    private static final String TEMP_FILE = "temp";
     //declaracion de variables
     //private EvaluationViewModel evaluationViewModel;
     TextInputEditText et_oxigenSat,et_heartRate;
@@ -114,7 +117,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     String uid,date;
     String isD;
     ActivityResult r;
-    File fileToUpload;
+    File fileToUpload = null;
     TextView tv;
     Uri uri;
     FirebaseUser user;
@@ -125,6 +128,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     View triagealert;
     ImageView triageColor;
     TextView tMensajeTriage;
+    Dialog d;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -198,27 +202,29 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
                     }
                 });
-        Dialog d = alertDialogBuilder.create();
+        d = alertDialogBuilder.create();
 
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
+                        assert result.getData() != null;
                         uri = result.getData().getData();
                             //fileToUpload = getFile(result);
                             //File f = new File(result.getData().getData().getPath());
                             //File f = new File(uri.getPath());
                             DocumentFile documentFile = DocumentFile.fromSingleUri(getContext(),uri);
-                            File f = new File(documentFile.getUri().toString());
+                           // File f = new File(documentFile.getUri().toString());
+                             File f = new File(documentFile.getName());
                             r = result;
                             fileToUpload = f;
-                            tv.setText(fileToUpload.getName());
+                            tv.setText(fileToUpload.getPath());
                             tv.setVisibility(View.VISIBLE);
                             et_heartRate.setVisibility(View.INVISIBLE);
                             et_oxigenSat.setVisibility(View.INVISIBLE);
                             etl_oxigen.setVisibility(View.INVISIBLE);
                             etl_heart.setVisibility(View.INVISIBLE);
-                            //uploadFile(result);
+                            ///uploadFile(result);
                         }
 
                 });
@@ -230,7 +236,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             public void onClick(View v) {
 
                 if (fileToUpload!=null){
-                    uploadFile(uri,d,r);
+                    uploadFile(uri);
                 }
                 else {
                     btn_eval.setEnabled(false);
@@ -327,15 +333,16 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             os.close();
         }
     }
-    private File getFile(ActivityResult result){
+  // private File getFile(ActivityResult result){
 
-        Intent da = result.getData();
-        //DocumentFile f = DocumentFile.fromSingleUri(getContext(),da.getData());  working
-        File file = new File(da.getData().getPath());
-        //File file = new File(f.getName());
-        //Log.d("ERROR",f.getName());
-        return file;
-    }
+  //     Intent da = result.getData();
+  //     //DocumentFile f = DocumentFile.fromSingleUri(getContext(),da.getData());  working
+  //     File file = new File(da.getData().getPath());
+  //     //File file = new File(f.getName());
+  //     //Log.d("ERROR",f.getName());
+  //     //File file12 = new File();
+  //     return file;
+  // }
     private RequestBody stripLength(RequestBody delegate) {
         return new RequestBody() {
             @Override public @Nullable MediaType contentType() {
@@ -349,8 +356,9 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     }
 
 
-    private void uploadFile(Uri file,Dialog d, ActivityResult result) {
+    private void uploadFile(Uri file) {
 
+        //uploadFile(File file)
         //   OkHttpClient client = new OkHttpClient();
         //   DocumentFile f = DocumentFile.fromSingleUri(getContext(),result.getData().getData());
         //   MediaType mediaType = MediaType.parse("multipart/form-data; boundary=---011000010111000001101001");
@@ -375,20 +383,27 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
         // evalResponse.getData().g
 
-
-//
         //  } catch (IOException e) {
         //      e.printStackTrace();
         //  }
-
-
         //Intent da = result.getData();
-
-        DocumentFile f = DocumentFile.fromSingleUri(getContext(), result.getData().getData());
-        //oast.makeText(getContext(), file.getScheme().toString(), Toast.LENGTH_SHORT).show();
-        File f13 = new File(result.getData().getData().getPath());
-        Uri uriii = Uri.fromFile(f13);
-        File file4 = new File(f.getName());
+        //String[] arr = {MediaStore.Images.Media.DATA};
+        //Cursor cursor = getContext().getContentResolver().query(uri, arr, null, null, null);
+        //if (cursor != null) {
+        //    int img_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        //    cursor.moveToFirst();
+        //    String img_path = cursor.getString(img_index);
+        //    File file15 = new File(img_path); //Get File
+        //    cursor.close(); //Release resources
+        //} else {
+        //    Toast.makeText(getContext(), "Cursor:null", Toast.LENGTH_SHORT).show();
+        //}
+       File f = getFile(getContext(),file);//new File(Objects.requireNonNull(FileUtils.getPath(file))); //getFile(getContext(),file);
+       //DocumentFile f = DocumentFile.fromSingleUri(getContext(),file );
+       // //oast.makeText(getContext(), file.getScheme().toString(), Toast.LENGTH_SHORT).show();
+       // File f13 = new File(result.getData().getData().getPath());
+       // Uri uriii = Uri.fromFile(f13);
+       // File file4 = ;
 
 
         //File f21 = new File(Objects.requireNonNull(ContentUriUtil.INSTANCE.getFilePath(getContext(), result.getData().getData()))) ;
@@ -396,55 +411,121 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         //File file1 = f.createFile("text/csv","file");
         //Log.d("ERROR",f.getName());
         //f.getName();
+//
 
-        //ApiService service = ApiAdapter.getApiService().
-        //RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"), f.getName());
-        //RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"),f.getName());
-        //RequestBody.create(MediaType.parse("application/octet-stream"),file.getName());
-        //MultipartBody body = new MultipartBody.Builder("12345").addPart(stripLength(requestFile)).build();
-        // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),body);
-        //MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);
-        //MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);
-        //MultipartBody.Part.createFormData();
+        //ApiService service = ApiAdapter.getApiService().postEvalCsv()
 
 
-        OkHttpClient client = new OkHttpClient();
-      // try {
-      //     this.getContext().getContentResolver().openInputStream(file).read();
-      // } catch (FileNotFoundException e) {
-      //     e.printStackTrace();
-      // } catch (IOException e) {
-      //     e.printStackTrace();
-      // }
-      // {
-      //     // read bytes and create requestbody here
-      // }
+      //RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
+
+      //RequestBody requestFile = RequestBody.create(MediaType.parse("text/csv"),f.getName())
+        // RequestBody.create(MediaType.parse("application/octet-stream"),file.getName());
+        //RequestBody body = new MultipartBody.Builder()
+          //      .setType(MultipartBody.FORM)
+            //    .addFormDataPart("file",f.getPath(),requestFile)
+              //  .build();
+        // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),body);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part.createFormData();
+
+/*
         RequestBody formBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file",file4.getName(),RequestBody
+                .addFormDataPart("file",f.getPath(),RequestBody
                         .create(MediaType.parse("application/octet-stream"),
-                                new File(file4.getName())))
+                                new File(f.getPath())))
                 .build();
+
+        Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(formBody);
+        evalResponseCall.enqueue(new Callback<EvalResponse>() {
+               @Override
+               public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+                   if (response.isSuccessful()){
+                       //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
+                       switch (response.body().getData().get(0).getCodigo()){
+                           case "Verde":
+                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etverde,null));
+                               tMensajeTriage.setText(R.string.eval_res_green);
+                               break;
+                           case "amarillo":
+                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etamar,null));
+                               tMensajeTriage.setText(R.string.eval_res_yellow);
+                               break;
+                           case "naranja":
+                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etnaranja,null));
+                               tMensajeTriage.setText(R.string.eval_res_orange);
+                               break;
+                           case "rojo":
+                               triageColor.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.etrojo,null));
+                               tMensajeTriage.setText(R.string.eval_res_red);
+                               break;
+                       }
+                       d.show();
+                       //Guardar resultado en base de datos
+                       save_eval(response);
+                   }
+               }
+
+               @Override
+               public void onFailure(Call<EvalResponse> call, Throwable t) {
+                   Log.e("Error",t.getMessage());
+               }
+           });
+
+
+                // OkHttpClient client = new OkHttpClient();
+                // try {
+                //     this.getContext().getContentResolver().openInputStream(file).read();
+                // } catch (FileNotFoundException e) {
+                //     e.printStackTrace();
+                // } catch (IOException e) {
+                //     e.printStackTrace();
+                // }
+                // {
+                //     // read bytes and create requestbody here
+                // }\
+
+
+
+ */
+
+         //   RequestBody requestFile = RequestBody.create(MediaType.parse(getContext().getContentResolver().getType(file)), f.getName());
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(100,TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .build();
+
+
+        MediaType mediaType = MediaType.parse("text/plain");
+
+
+        RequestBody formBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file",f.getPath(),RequestBody
+                        .create(MediaType.parse("application/octet-stream"),
+                                new File(f.getPath())))
+                .build();
+
         Request request = new Request.Builder()
                 .url("https://oxipulse.herokuapp.com/upload")
                 .post(formBody)
                 .build();
+
+
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 Log.e("ERROR", e.getMessage(), e);
                 //Toast.makeText(getContext(), "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
             }
-            public <T> List<T> getList(String jsonArray, Class<T> EvalResponse) {
-                Type typeOfT = TypeToken.getParameterized(List.class, EvalResponse).getType();
-                return new Gson().fromJson(jsonArray, typeOfT);
-            }
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 //si la respuesta se obtiene
                if (response.isSuccessful()) {
 
-                   Type listType = new TypeToken<ArrayList<EvalResponse>>(){}.getType();
+                   //Type listType = new TypeToken<ArrayList<EvalResponse>>(){}.getType();
                    List<EvalResponse> yourClassList = getList(response.body().string(),EvalResponse.class);
 
                    switch (yourClassList.get(0).getData().get(0).getTriage()){
@@ -465,6 +546,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                            tMensajeTriage.setText(R.string.eval_res_red);
                            break;
                    }
+                   //d.show();
                    d.show();
                //    String res= response.body().string();
                //    List<EvalResponse> evalResponseList = new EvalResponse();
@@ -485,6 +567,27 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
     }
 
+    public <T> List<T> getList(String jsonArray, Class<T> EvalResponse) {
+        Type typeOfT = TypeToken.getParameterized(List.class, EvalResponse).getType();
+        return new Gson().fromJson(jsonArray, typeOfT);
+
+    }
+    public static File getFile(Context context, Uri uri) {
+        if (uri != null) {
+            String path = getPath(context, uri);
+            if (path != null && isLocal(path)) {
+                return new File(path);
+            }
+        }
+        return null;
+    }
+
+    public static boolean isLocal(String url) {
+        if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
+            return true;
+        }
+        return false;
+    }
 
     public static String getPath(Context context, Uri uri) {
 
@@ -508,6 +611,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                     final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                     return getDataColumn(context, contentUri, null, null);
                 }
+
                 // MediaProvider
                 else if (isMediaDocument(uri)) {
                     final String docId = DocumentsContract.getDocumentId(uri);
@@ -532,6 +636,10 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
+            if (isGoogleDriveUri(uri)) {
+                return getDriveFilePath(uri, context);
+            }
+
             return getDataColumn(context, uri, null, null);
         }
         // File
@@ -541,6 +649,44 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         return null;
     }
 
+    private static String getDriveFilePath(Uri uri, Context context) {
+        Uri returnUri = uri;
+        Cursor returnCursor = context.getContentResolver().query(returnUri, null, null, null, null);
+        /*
+         * Get the column indexes of the data in the Cursor,
+         *     * move to the first row in the Cursor, get the data,
+         *     * and display it.
+         * */
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+        returnCursor.moveToFirst();
+        String name = (returnCursor.getString(nameIndex));
+        String size = (Long.toString(returnCursor.getLong(sizeIndex)));
+        File file = new File(context.getCacheDir(), name);
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            int read = 0;
+            int maxBufferSize = 1 * 1024 * 1024;
+            int bytesAvailable = inputStream.available();
+
+            //int bufferSize = 1024;
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+
+            final byte[] buffers = new byte[bufferSize];
+            while ((read = inputStream.read(buffers)) != -1) {
+                outputStream.write(buffers, 0, read);
+            }
+            Log.e("File Size", "Size " + file.length());
+            inputStream.close();
+            outputStream.close();
+            Log.e("File Path", "Path " + file.getPath());
+            Log.e("File Size", "Size " + file.length());
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
+        }
+        return file.getPath();
+    }
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";
@@ -561,7 +707,9 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
-
+    private static boolean isGoogleDriveUri(Uri uri) {
+        return "com.google.android.apps.docs.storage".equals(uri.getAuthority()) || "com.google.android.apps.docs.storage.legacy".equals(uri.getAuthority());
+    }
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
@@ -647,6 +795,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
 
     }
+
 
     @Override
     public void onFocusChange(View view, boolean b) {
