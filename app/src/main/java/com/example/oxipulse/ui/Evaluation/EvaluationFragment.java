@@ -211,6 +211,8 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         assert result.getData() != null;//se le asigna al uri el uri del archivo seleccionado
                         uri = result.getData().getData();
                         btn_eval.setEnabled(true);
+                        File f = getFile(getContext(),uri);
+                        tv.setText(f.getName());
 
                         et_heartRate.setText("");
                         et_oxigenSat.setText("");
@@ -220,7 +222,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         //se ocultan los campos de oxi y saturacion y se muestra el spinner para
                         //seleccionar el usuario al que se le asignara la lectura
                         CSVVisibilityAfterselectON();
-
+                        tv.setVisibility(View.VISIBLE);
                         }
 
                 });
@@ -235,7 +237,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 if (uri != null) {
                     //se sube el archivo con la funcion UploadFile
                     uploadFile(uri);
-                    CSVVisibilityAfterselectOFF();
+
                     uri=null;
                 } else {
                     if (!(et_heartRate.getText().toString().isEmpty()||et_oxigenSat.getText().toString().isEmpty())){
@@ -300,7 +302,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part.createFormData();
 
-        tv.setText(f.getName());
+
         Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(body);
 
         evalResponseCall.enqueue(new Callback<EvalResponse>() {
@@ -343,6 +345,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 break;
         }
         d.show();
+        CSVVisibilityAfterselectOFF();
         btn_eval.setEnabled(true);
     }
 
@@ -489,6 +492,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         et_oxigenSat.setVisibility(View.INVISIBLE);
         etl_oxigen.setVisibility(View.INVISIBLE);
         etl_heart.setVisibility(View.INVISIBLE);
+        tv.setVisibility(View.VISIBLE);
         lbl_selectPatient.setVisibility(View.VISIBLE);
         namesSpinner.setVisibility(View.VISIBLE);
     }
@@ -497,6 +501,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         et_oxigenSat.setVisibility(View.VISIBLE);
         etl_oxigen.setVisibility(View.VISIBLE);
         etl_heart.setVisibility(View.VISIBLE);
+        tv.setVisibility(View.INVISIBLE);
         lbl_selectPatient.setVisibility(View.VISIBLE);
         namesSpinner.setVisibility(View.VISIBLE);
     }
