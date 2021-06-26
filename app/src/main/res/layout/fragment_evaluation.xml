@@ -118,7 +118,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="visible"
             tools:visibility="visible" />
 
         <Button
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/bordes_redondos"
-            android:enabled="false"
+            android:enabled="true"
             android:text="@string/Evaluation"
             android:textColor="@color/black"
             android:visibility="invisible"

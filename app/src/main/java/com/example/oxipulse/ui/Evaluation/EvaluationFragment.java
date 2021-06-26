@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -177,13 +178,14 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             else {
                 isD= task.getResult().getValue(patient.class).getIsDoc();
                 if (isD.equals("true")){
-                    btn_csv.setVisibility(View.VISIBLE);
+                    //btn_csv.setVisibility(View.VISIBLE);
                     fillPatientSpinners();
                     lbl_selectPatient.setVisibility(View.VISIBLE);
                     Log.d ("D",  task.getResult().toString());
                 }
                 else {
                     oxirateVisible();
+                    tv.setVisibility(View.INVISIBLE);
                     btn_eval.setVisibility(View.VISIBLE);
                 }
 
@@ -211,11 +213,14 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 result -> {
                     //si el codigo de respuesta del resultado es RESULT_OK
                     if (result.getResultCode() == RESULT_OK) {
-                        assert result.getData() != null;
-                        btn_eval.setEnabled(true);
-                        //se le asigna al uri el uri del archivo seleccionado
+                        assert result.getData() != null;//se le asigna al uri el uri del archivo seleccionado
                         uri = result.getData().getData();
-                        
+                        btn_eval.setEnabled(true);
+
+                        et_heartRate.setText("");
+                        et_oxigenSat.setText("");
+
+
                         //se llena el spinner con los datos de los pacientes
                         //se ocultan los campos de oxi y saturacion y se muestra el spinner para
                         //seleccionar el usuario al que se le asignara la lectura
@@ -235,12 +240,17 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 if (uri != null) {
                     //se sube el archivo con la funcion UploadFile
                     uploadFile(uri);
-
                     CSVVisibilityAfterselectOFF();
+                    uri=null;
                 } else {
+                    if (!(et_heartRate.getText().toString().isEmpty()||et_oxigenSat.getText().toString().isEmpty())){
+                        DirectEval();
+                    }else {
+                        Toast.makeText(getContext(), "Debe rellenar todos los campos", Toast.LENGTH_SHORT).show();
+                    }
 
                     //si es nulo se introdujo un valor a los campos de oxi y sat
-                    DirectEval();
+
                 }
             }
 
@@ -259,14 +269,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         return root;
     }
 
-    private void oxirateVisible() {
-        lbl_hint_rate.setVisibility(View.VISIBLE);
-        lbl_hint_oxi.setVisibility(View.VISIBLE);
-        etl_heart.setVisibility(View.VISIBLE);
-        etl_oxigen.setVisibility(View.VISIBLE);
-        et_oxigenSat.setVisibility(View.VISIBLE);
-        et_heartRate.setVisibility(View.VISIBLE);
-    }
+
 
 
     private void DirectEval() {
@@ -304,7 +307,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"),new File(f.getPath()));
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), requestFile);//MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", f.getName(),requestFile);//MultipartBody.Part.createFormData();
 
-
+        tv.setText(f.getName());
         Call<EvalResponse> evalResponseCall = ApiAdapter.getApiService().postEvalCsv(body);
 
         evalResponseCall.enqueue(new Callback<EvalResponse>() {
@@ -313,8 +316,10 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                 if (response.isSuccessful()){
                     //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
                     showDialogOnResponse(response);
+                    tv.setText("");
                     //Guardar resultado en base de datos
                    SaveEvalCsv(response,uid);
+                   uri=null;
                 }
             }
 
@@ -392,8 +397,8 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         HashMap<String,String> hashMap = new HashMap<>();
         hashMap.put("date",date);
         hashMap.put("tag",response.body().getData().get(0).getCodigo());
-        hashMap.put("hr",sat);
-        hashMap.put("oxi",oxi);
+        hashMap.put("hr","csv");
+        hashMap.put("oxi","csv");
         hashMap.put("degree_of_urgency",String.valueOf(response.body().getData().get(0).getGradoDeUrgencia()));
         //hashMap.put("id",uid);
 
@@ -431,6 +436,8 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                         patient p = spinnerPatientAdapter.getItem(position);
                         uid=p.getId();
                         oxirateVisible();
+                        btn_csv.setVisibility(View.VISIBLE);
+                        btn_eval.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -474,7 +481,14 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         }
     }
 
-
+    private void oxirateVisible() {
+        lbl_hint_rate.setVisibility(View.VISIBLE);
+        lbl_hint_oxi.setVisibility(View.VISIBLE);
+        etl_heart.setVisibility(View.VISIBLE);
+        etl_oxigen.setVisibility(View.VISIBLE);
+        et_oxigenSat.setVisibility(View.VISIBLE);
+        et_heartRate.setVisibility(View.VISIBLE);
+    }
 
 
     private void CSVVisibilityAfterselectON() {
@@ -490,7 +504,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         et_oxigenSat.setVisibility(View.VISIBLE);
         etl_oxigen.setVisibility(View.VISIBLE);
         etl_heart.setVisibility(View.VISIBLE);
-        lbl_selectPatient.setVisibility(View.INVISIBLE);
+        lbl_selectPatient.setVisibility(View.VISIBLE);
         namesSpinner.setVisibility(View.VISIBLE);
     }
 
