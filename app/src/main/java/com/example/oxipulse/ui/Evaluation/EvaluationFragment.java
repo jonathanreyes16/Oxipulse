@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -81,10 +80,7 @@ import static android.app.Activity.RESULT_OK;
 public class EvaluationFragment extends Fragment implements View.OnFocusChangeListener/* implements Callback<EvalResponse>*/ {
 
 
-    private static final int REQUEST_CODE_FILE = 2;
-    private static final int ACTIVITY_CHOOSE_FILE1 = 1;
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 12;
-    private static final String TEMP_FILE = "temp";
     //declaracion de variables
     //private EvaluationViewModel evaluationViewModel;
     TextInputEditText et_oxigenSat,et_heartRate;
@@ -98,7 +94,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
     FirebaseDatabase Database;
     DatabaseReference refdoc, ref,ref2;
     Spinner namesSpinner;
-    private static final int PICK_PDF_FILE = 2;
     private static Uri contentUri = null;
     View triagealert;
     ImageView triageColor;
@@ -310,7 +305,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
         evalResponseCall.enqueue(new Callback<EvalResponse>() {
             @Override
-            public void onResponse(Call<EvalResponse> call, Response<EvalResponse> response) {
+            public void onResponse(@NotNull Call<EvalResponse> call, @NotNull Response<EvalResponse> response) {
                 if (response.isSuccessful()){
                     //switch en caso de cada respuesta, cambia el color del cuadro y el texto del triage
                     showDialogOnResponse(response);
@@ -322,7 +317,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             }
 
             @Override
-            public void onFailure(Call<EvalResponse> call, Throwable t) {
+            public void onFailure(@NotNull Call<EvalResponse> call, @NotNull Throwable t) {
                 Log.e("Error",t.getMessage());
             }
         });
@@ -386,7 +381,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         date= java.text.DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,Locale.getDefault()).format(Calendar.getInstance().getTime());
         // String dates = new SimpleDateFormat("dd/MM/yyyy HH:mm",Locale.getDefault()).format(date);
 
-        String d = UID;
+
         ref=Database.getReference("Records").push();
         ref2=Database.getReference("User-Records");
 
@@ -403,7 +398,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         String key = ref.getKey();
 
         ref.setValue(hashMap);
-        ref2.child(d).child(key).setValue("true").addOnCompleteListener(task -> {
+        ref2.child(UID).child(key).setValue("true").addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 Toast.makeText(getContext(), "Registro Guardado", Toast.LENGTH_SHORT).show();
             }
@@ -420,7 +415,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
         ref.orderByChild("isDoc").equalTo("false").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                final List<patient> patientsList = new ArrayList<patient>();
+                final List<patient> patientsList = new ArrayList<>();
                 for (DataSnapshot patients: snapshot.getChildren()) {
                     patient p = patients.getValue(patient.class);
                     patientsList.add(p);
@@ -666,7 +661,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
             FileOutputStream outputStream = new FileOutputStream(file);
             int read = 0;
-            int maxBufferSize = 1 * 1024 * 1024;
+            int maxBufferSize = 1024 * 1024;
             int bytesAvailable = inputStream.available();
 
             //int bufferSize = 1024;
