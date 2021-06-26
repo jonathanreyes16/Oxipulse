@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         email=findViewById(R.id.itext_email_login);
         password=findViewById(R.id.itext_pass_login);
         btn_lgn=findViewById(R.id.btn_ingresar);
-        forgot_password = findViewById(R.id.lbl_forgot_pass);
+        forgot_password = findViewById(R.id.lkforgot_pass);
 
         //evento del textview de olvidaste la contrasena
         forgot_password.setOnClickListener(new View.OnClickListener() {

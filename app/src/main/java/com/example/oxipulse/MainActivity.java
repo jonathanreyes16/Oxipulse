@@ -12,7 +12,9 @@ import com.google.firebase.auth.FirebaseUser;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -34,29 +36,10 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_history, R.id.navigation_check,R.id.navigation_exit)
                 .build();
+        //NavHostFragment navHostFragment = supportFragmentManager.find
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-        /*
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.getItemId()==R.id.navigation_exit){
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    auth.signOut();
-                    Intent intent = new Intent(MainActivity.this,StartActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                return false;
-            }
-        });
-        */
-
-
-
     }
-
 }

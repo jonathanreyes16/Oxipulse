@@ -1,9 +1,12 @@
 package com.example.oxipulse.api;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiAdapter {
 
@@ -18,6 +21,9 @@ public class ApiAdapter {
         // Asociamos el interceptor a las peticiones
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(logging);
+        httpClient.connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(300,TimeUnit.SECONDS);
+
 
         //direccion de nuestra API
         String baseUrl = "https://oxipulse.herokuapp.com/";
@@ -27,6 +33,7 @@ public class ApiAdapter {
             //Se crea el objeto retrofit y se configura
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
+                    //.addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build()) // <-- usamos el log level
                     .build();

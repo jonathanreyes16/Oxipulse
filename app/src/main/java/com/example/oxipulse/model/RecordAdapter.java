@@ -39,6 +39,8 @@ public class RecordAdapter extends FirebaseRecyclerAdapter<record,RecordAdapter.
         holder.ritCar.setText(model.getHr());
         holder.satOxi.setText(model.getOxi());
         holder.etiqueta.setText(model.getTag());
+
+        //
     }
 
 

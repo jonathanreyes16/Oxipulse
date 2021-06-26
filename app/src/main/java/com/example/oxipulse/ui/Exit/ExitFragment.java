@@ -17,25 +17,19 @@ import com.example.oxipulse.StartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ExitFragment extends Fragment {
-
     private ExitViewModel mViewModel;
-
     public static ExitFragment newInstance() {
         return new ExitFragment();
     }
     //definicion de boton
     Button btn_logout;
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        //el fragmento tendra la vista de exit_fragment
+ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                          @Nullable Bundle savedInstanceState) {//el fragmento tendra la vista de exit_fragment
         View v = inflater.inflate(R.layout.exit_fragment, container, false);
         //se infla el widget
         btn_logout=v.findViewById(R.id.btn_signout);
-
-        btn_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
+        btn_logout.setOnClickListener(new View.OnClickListener() {@Override
             public void onClick(View v) {
                //se obtiene la instacia de auth
                 FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -49,16 +43,6 @@ public class ExitFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
         return v;
     }
-
-    /*
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ExitViewModel.class);
-        // TODO: Use the ViewModel
-    }
-    */
 }
