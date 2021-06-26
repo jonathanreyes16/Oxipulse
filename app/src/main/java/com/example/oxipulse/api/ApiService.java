@@ -5,6 +5,7 @@ import com.example.oxipulse.model.EvalResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -27,7 +28,9 @@ public interface ApiService {
     @Multipart
     @POST("upload")
     Call<EvalResponse> postEvalCsv(
+            //@Part("file") RequestBody file
             @Part MultipartBody.Part file
-            //@Part("file") MultipartBody.Part file
             );
+    //Call<MyResponse> uploadImage(@Part("image\"; filename=\"myfile.jpg\" ") RequestBody file, @Part("desc") RequestBody desc);
+
 }
