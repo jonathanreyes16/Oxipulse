@@ -178,7 +178,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
             else {
                 isD= task.getResult().getValue(patient.class).getIsDoc();
                 if (isD.equals("true")){
-                    //btn_csv.setVisibility(View.VISIBLE);
                     fillPatientSpinners();
                     lbl_selectPatient.setVisibility(View.VISIBLE);
                     Log.d ("D",  task.getResult().toString());
@@ -191,6 +190,7 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
 
             }
         });
+
         //se crea un alertbuilder, que se encarga de hacer el alertDialog, al cual le daremos parametros
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
@@ -248,8 +248,6 @@ public class EvaluationFragment extends Fragment implements View.OnFocusChangeLi
                     }else {
                         Toast.makeText(getContext(), "Debe rellenar todos los campos", Toast.LENGTH_SHORT).show();
                     }
-
-                    //si es nulo se introdujo un valor a los campos de oxi y sat
 
                 }
             }

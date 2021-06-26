@@ -46,13 +46,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //se infla el itemlayout
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout,parent,false);
-        //se define el tamano, margenes y parametros de la vista del layout
-       // v.setOnClickListener(new View.OnClickListener() {
-       //     @Override
-       //     public void onClick(View v) {
-       //         Toast.makeText(parent.getContext(), "t"+viewType, Toast.LENGTH_SHORT).show();
-       //     }
-       // });
+
 
         return new PatientAdapter.MyViewHolder(v);
     }
@@ -71,7 +65,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
              @Override
              public void onClick(View v) {
 
-                 Toast.makeText(v.getContext(), "t "+holder.uid, Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(v.getContext(), "t "+holder.uid, Toast.LENGTH_SHORT).show();
 
                  Bundle bundle = new Bundle();
                  bundle.putString("UID",holder.uid);
@@ -79,30 +73,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
                  fragment.setArguments(bundle);
                  AppCompatActivity activity = ((AppCompatActivity)v.getContext());
                  fragment.show(activity.getSupportFragmentManager(),holder.uid);
-                 //fragment.show();
 
-                 //AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-
-                 //LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                 //View view1 = inflater.inflate(R.layout.fragment_records,null);
-                 //builder.setView(view1);
-                 //builder.setTitle("Historial");
-                 //Dialog d = builder.create();
-                 //d.show();
-
-                 //RecordsFragment fragment =RecordsFragment.newInstance(holder.uid);
-                 //AppCompatActivity activity = ((AppCompatActivity)v.getContext());
-                 //fragment.show(activity.getSupportFragmentManager(),"UID");
-
-                 //activity.getSupportFragmentManager().beginTransaction().replace(fragment);
-                 //fragment.show(fragmentManager, holder.uid);
-                 //AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                //LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                //View view1 = inflater.inflate(R.layout.fragment_records,null);
-                //builder.setView(view1);
-                //builder.setTitle("Historial");
-                //Dialog d = builder.create();
-                //d.show();
              }
          });
 
@@ -123,26 +94,7 @@ public class PatientAdapter extends FirebaseRecyclerAdapter<patient, PatientAdap
             peso = itemView.findViewById(R.id.row_text3);
             estatura = itemView.findViewById(R.id.row_text4);
 
-          // itemView.setOnClickListener(new View.OnClickListener() {
-          //     @Override
-          //     public void onClick(View v) {
-          //         mClickListener.onItemClick(v,getAdapterPosition());
-          //     }
-          // });
-
-
         }
-       // private MyViewHolder.ClickListener mClickListener;
-       // //Interface to send callbacks...
-//
-       // public interface ClickListener{
-       //     public void onItemClick(View view, int position);
-       //     //public void onItemLongClick(View view, int position);
-       // }
-//
-       // public void setOnClickListener(MyViewHolder.ClickListener clickListener){
-       //     mClickListener = clickListener;
-       // }
     }
 
 

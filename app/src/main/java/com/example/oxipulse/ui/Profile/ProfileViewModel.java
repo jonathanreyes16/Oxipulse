@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.oxipulse.model.FirebaseQueryLiveData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,14 +21,10 @@ public class ProfileViewModel extends ViewModel {
     private String First_Name, id, imageUrl,LastName,isDoc,MiddleName;
     private String birthdate,weight,sex,diabetes,asma,hipertension ;
 
-    //se declara la variable liveData, es un query hacia la base de datos, Users
-    private final FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(MY_PROFILE_REF);
+
 
     //get que retorna el livedata, esta seria el resultado del query
-    @NonNull
-    public LiveData<DataSnapshot> getDataSnapshotLiveData() {
-        return liveData;
-    }
+
 
 
     public ProfileViewModel() {

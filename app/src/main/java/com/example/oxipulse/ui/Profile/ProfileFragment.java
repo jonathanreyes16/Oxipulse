@@ -1,6 +1,7 @@
 package com.example.oxipulse.ui.Profile;
 
 import android.app.DatePickerDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,8 +12,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +33,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
@@ -37,6 +42,7 @@ public class ProfileFragment extends Fragment {
     // declaracion de variables
     ProfileViewModel profileViewModel;
     //declaracion de variables
+    TextView tv_name,tv_last1,tv_last2,tv_birth,tv_height,tv_weight,tv_sex,tv_asthma,tv_diabetes,tv_hypertension;
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
     Button btn_edit, btn_accept,btn_cancel,btn_calendar;
     Spinner tGender;
@@ -44,6 +50,8 @@ public class ProfileFragment extends Fragment {
     CheckBox tAsthma,tDiabetes,tHypertension;
     String uid,isdoc,imageUrl;
     ImageView profilePic;
+
+    GridLayout gridLayout;
     //Boolean op;
     FirebaseDatabase Database;
     DatabaseReference ref;
@@ -74,6 +82,19 @@ public class ProfileFragment extends Fragment {
         btn_accept=v.findViewById(R.id.btn_accept);
         btn_cancel=v.findViewById(R.id.btn_cancel);
         btn_calendar=v.findViewById(R.id.btn_calendar);
+        gridLayout =v.findViewById(R.id.grid);
+
+        tv_name=v.findViewById(R.id.tv_name);
+        tv_last1=v.findViewById(R.id.tv_last_n1);
+        tv_last2=v.findViewById(R.id.tv_last_n2);
+        tv_height=v.findViewById(R.id.tv_height);
+        tv_weight=v.findViewById(R.id.tv_weight);
+        tv_birth=v.findViewById(R.id.tv_birthdate);
+        tv_sex=v.findViewById(R.id.tv_sex);
+        tv_asthma=v.findViewById(R.id.tv_asma);
+        tv_diabetes=v.findViewById(R.id.tv_diabetes);
+        tv_hypertension=v.findViewById(R.id.tv_hipertension);
+
         //objeto que se usa para almacenar datos
         temp= new patient();
         //metodo para desabilitar los textos
@@ -90,6 +111,8 @@ public class ProfileFragment extends Fragment {
 
             // en este caso solo nos interesa el usuario actual, En User/uid, donde uid es el usuario actual
             ref = Database.getReference().child("Users").child(uid);
+            //obtenemos el uid del usuario actual  para despues tener todos los datos buscando solo ese id
+
             //evento para leer los datos
             ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
@@ -124,6 +147,23 @@ public class ProfileFragment extends Fragment {
                             tDiabetes.setChecked(Boolean.parseBoolean(p.getDiabetes()));
                             tHypertension.setChecked(Boolean.parseBoolean(p.getHipertension()));
                         }
+                        //checamos que si el usuario es personal de salud o paciente
+                        //modifica el UI para el personal de salud
+                        if(Boolean.parseBoolean(p.getIsDoc()) ){
+                            hideUIDoc();
+
+                            tHeight.setText(user.getEmail());
+                            tWeight.setText(R.string.health_personnel);
+                            tHeight.setTypeface(null, Typeface.BOLD);
+                            tWeight.setTypeface(null,Typeface.BOLD);
+
+
+
+
+                        } else{
+                            //vista para el paciente
+                            PatientView( );
+                        }
 
                         //poner la imager de perfil, no funciona aun
                         //if (p.getImageUrl()!=null){
@@ -136,6 +176,14 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+        return v;
+    }
+
+
+
+    //metodo para que cambie la vista dependiendo si es paciente o no
+    private void PatientView(){
+
 
         //evento del boton edit
         btn_edit.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +256,7 @@ public class ProfileFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         //la fecha seleccionada se asigna a la variable selectedDate
 
-                        String selectedDate=dayOfMonth+"/"+(month+1)+"/"+year;
+                        String selectedDate=twoDigits(dayOfMonth)+"/"+twoDigits(month+1)+"/"+year;
                         //Al TextView birthdate se le asigna el valor de la fecha seleccionada
                         tBirthdate.setText(selectedDate);
                     }
@@ -218,15 +266,25 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        return v;
     }
 
+    private void hideUIDoc() {
+        tBirthdate.setVisibility(View.INVISIBLE);
 
-    //metodo para que caambie la vista dependiendo si es doctor o no
-    private void DoctorView(){
-    }
-    //metodo para que cambie la vista dependiendo si es paciente o no
-    private void PatientView(){
+        tGender.setVisibility(View.INVISIBLE);
+        tAsthma.setVisibility(View.INVISIBLE);
+        tDiabetes.setVisibility(View.INVISIBLE);
+        tHypertension.setVisibility(View.INVISIBLE);
+
+        tv_height.setVisibility(View.INVISIBLE);
+        tv_weight.setVisibility(View.INVISIBLE);
+        tv_birth.setVisibility(View.INVISIBLE);
+        tv_sex.setVisibility(View.INVISIBLE);
+        tv_asthma.setVisibility(View.INVISIBLE);
+        tv_diabetes.setVisibility(View.INVISIBLE);
+        tv_hypertension.setVisibility(View.INVISIBLE);
+
+        btn_edit.setVisibility(View.INVISIBLE);
     }
 
 
@@ -238,6 +296,10 @@ public class ProfileFragment extends Fragment {
         btn_cancel.setVisibility(View.VISIBLE);
 
     }
+    private String twoDigits(int n) {
+        return (n<=9) ? ("0"+n) : String.valueOf(n);
+    }
+
     private void disableEdit(){
         btn_edit.setEnabled(true);
         setAllDisabled();
