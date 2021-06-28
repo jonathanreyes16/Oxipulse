@@ -65,4 +65,6 @@
     <string name="CSV_Button">Subir CSV</string>
     <string name="Select_Patient">Seleccione el paciente para evaluar</string>
     <string name="recuperar">Recuperar</string>
+    <string name="profilePicDesc">ProfilePic</string>
+    <string name="imguploadicon">imgUploadIcon</string>
 </resources>

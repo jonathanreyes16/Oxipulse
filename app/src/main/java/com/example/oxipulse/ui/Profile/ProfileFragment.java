@@ -1,8 +1,14 @@
 package com.example.oxipulse.ui.Profile;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,17 +31,32 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.oxipulse.R;
 import com.example.oxipulse.model.patient;
 import com.example.oxipulse.ui.DatePicker.DatePickerFragment;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
+import java.util.UUID;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
@@ -46,17 +67,28 @@ public class ProfileFragment extends Fragment {
     EditText tName,tLast1,tLast2,tBirthdate,tWeight,tHeight;
     Button btn_edit, btn_accept,btn_cancel,btn_calendar;
     Spinner tGender;
-    //Spinner tWeight_int,tWeight_dec,tHeight_int,tHeight_dec;
+    Bitmap tempbit,bitmap;
+
+    CircleImageView profilePic;
+    ImageView profilePicIcon;
+
     CheckBox tAsthma,tDiabetes,tHypertension;
     String uid,isdoc,imageUrl;
-    ImageView profilePic;
-
+    final int PICK_IMAGE=12;
     GridLayout gridLayout;
-    //Boolean op;
+    FirebaseUser user;
+
     FirebaseDatabase Database;
     DatabaseReference ref;
+
+    FirebaseStorage storage;
+
+    StorageReference storageReference;
+    StorageReference storageReferenceref;
+    StorageReference httpsReference;
+
     patient temp;
-    private static final String BARRA = "/";
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +109,7 @@ public class ProfileFragment extends Fragment {
         tAsthma=v.findViewById(R.id.chk_asthma);
         tDiabetes=v.findViewById(R.id.chk_diabetes);
         profilePic=v.findViewById(R.id.imgProfilePic);
+        profilePicIcon=v.findViewById(R.id.imgUploadIcon);
         tHypertension=v.findViewById(R.id.chk_hypertension);
         btn_edit=v.findViewById(R.id.btn_edit);
         btn_accept=v.findViewById(R.id.btn_accept);
@@ -95,12 +128,12 @@ public class ProfileFragment extends Fragment {
         tv_diabetes=v.findViewById(R.id.tv_diabetes);
         tv_hypertension=v.findViewById(R.id.tv_hipertension);
 
-        //objeto que se usa para almacenar datos
-        temp= new patient();
+
+        profilePic.setDrawingCacheEnabled(true);
         //metodo para desabilitar los textos
         setAllDisabled();
         //se obtiene el usuario actual
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         //si el usuario no es nulo se ejecuta el codigo
         if (user!=null){
             //obtenemos el uid del usuario actual  para despues tener todos los datos buscando solo ese id
@@ -108,6 +141,8 @@ public class ProfileFragment extends Fragment {
 
             //path de la base de datos que usaremos
             Database= FirebaseDatabase.getInstance();
+            storage = FirebaseStorage.getInstance();
+            storageReference = storage.getReference();
 
             // en este caso solo nos interesa el usuario actual, En User/uid, donde uid es el usuario actual
             ref = Database.getReference().child("Users").child(uid);
@@ -147,6 +182,8 @@ public class ProfileFragment extends Fragment {
                             tDiabetes.setChecked(Boolean.parseBoolean(p.getDiabetes()));
                             tHypertension.setChecked(Boolean.parseBoolean(p.getHipertension()));
                         }
+
+
                         //checamos que si el usuario es personal de salud o paciente
                         //modifica el UI para el personal de salud
                         if(Boolean.parseBoolean(p.getIsDoc()) ){
@@ -158,17 +195,12 @@ public class ProfileFragment extends Fragment {
                             tWeight.setTypeface(null,Typeface.BOLD);
 
 
-
-
                         } else{
                             //vista para el paciente
-                            PatientView( );
+                            PatientView();
                         }
 
-                        //poner la imager de perfil, no funciona aun
-                        //if (p.getImageUrl()!=null){
-                        //    profilePic.setImageURI(Uri.parse(p.getImageUrl())); //agregar la imagen
-                        //}
+
 
                         //log para debug
                         Log.d("firebase",String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
@@ -180,19 +212,29 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     //metodo para que cambie la vista dependiendo si es paciente o no
     private void PatientView(){
+        getProfilePhoto();
 
 
         //evento del boton edit
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //objeto que se usa para almacenar datos
+                temp= new patient();
                 setTemp();
                 enableEdit();
             }
         });
+
+        profilePicIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectProfilePhoto();
+            }
+        });
+
 
         //evento del boton accept
         btn_accept.setOnClickListener(new View.OnClickListener() {
@@ -223,9 +265,12 @@ public class ProfileFragment extends Fragment {
                     u.setImageUrl(imageUrl);
                     u.setIsDoc(isdoc);
                     u.setId(uid);
+
                     //se envia a la base de datos el paciente generado para que se actualicen los datos
                     ref.setValue(u);
+
                     //se crea un mensage que dice que se guardo
+
                     Toast.makeText(getContext(), "Guardado", Toast.LENGTH_SHORT).show();
                     disableEdit();
                 }
@@ -268,8 +313,109 @@ public class ProfileFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                //Display an error
+                return;
+            }
+            try {
+                InputStream inputStream = requireContext().getContentResolver().openInputStream(data.getData());
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                profilePic.setImageBitmap(bitmap);
+                uploadProfilePhoto();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void selectProfilePhoto(){
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK);
+        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+        startActivityForResult(pickIntent, PICK_IMAGE);
+
+    }
+
+    private void uploadProfilePhoto(){
+        if (bitmap!=null){
+
+            //String imgID=UUID.randomUUID().toString();
+
+            storageReferenceref=storageReference.child("images/"+uid);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imgdata = baos.toByteArray();
+
+            UploadTask uploadTask = storageReferenceref.putBytes(imgdata);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful()){
+                        Toast.makeText(getContext(), "Error al subir archivo", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getContext(), "Imagen Subida Correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                    return storageReferenceref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        assert downloadUri != null;
+                        imageUrl=downloadUri.toString();
+
+                        ref.child("imageUrl").setValue(downloadUri.toString());
+                    }
+                }
+            });
+        }
+
+    }
+
+    private void getProfilePhoto() {
+
+            File rootPath = new File(Environment.getExternalStorageDirectory(), "profilePic");
+            if (!rootPath.exists()) {
+                rootPath.mkdirs();
+            }
+
+                File localFile1 = new File(rootPath, "profilePic");
+                Bitmap bitmap1 = BitmapFactory.decodeFile(localFile1.getPath());
+                profilePic.setImageBitmap(bitmap1);
+
+
+            httpsReference = storage.getReferenceFromUrl(imageUrl);
+            File localFile = new File(rootPath, "profilePic");
+
+            httpsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getPath());
+                    profilePic.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull @NotNull Exception e) {
+                    Log.e("firebase", "local item not created" + e.toString());
+                }
+            });
+
+
+
+
+    }
+
     private void hideUIDoc() {
         tBirthdate.setVisibility(View.INVISIBLE);
+        profilePic.setVisibility(View.INVISIBLE);
 
         tGender.setVisibility(View.INVISIBLE);
         tAsthma.setVisibility(View.INVISIBLE);
@@ -293,6 +439,7 @@ public class ProfileFragment extends Fragment {
         setAllEnabled();
         btn_accept.setVisibility(View.VISIBLE);
         btn_calendar.setVisibility(View.VISIBLE);
+        profilePicIcon.setVisibility(View.VISIBLE);
         btn_cancel.setVisibility(View.VISIBLE);
 
     }
@@ -302,6 +449,7 @@ public class ProfileFragment extends Fragment {
 
     private void disableEdit(){
         btn_edit.setEnabled(true);
+        profilePicIcon.setVisibility(View.INVISIBLE);
         setAllDisabled();
         btn_accept.setVisibility(View.INVISIBLE);
         btn_calendar.setVisibility(View.INVISIBLE);
@@ -311,6 +459,7 @@ public class ProfileFragment extends Fragment {
     private void setAllEnabled(){
         tName.setEnabled(true);
         tLast1.setEnabled(true);
+
         tLast2.setEnabled(true);
         //tBirthdate.setEnabled(true);
         tWeight.setEnabled(true);
@@ -346,6 +495,8 @@ public class ProfileFragment extends Fragment {
         temp.setHeight(tHeight.getText().toString());
         temp.setGender(tGender.getSelectedItem().toString());
         temp.setAsma(String.valueOf(tAsthma.isChecked()));
+        //temp.setImageUrl(imageUrl);
+        //tempbit = profilePic.getDrawingCache();
         temp.setDiabetes(String.valueOf(tDiabetes.isChecked()));
         temp.setHipertension(String.valueOf(tHypertension.isChecked()));
     }
@@ -357,6 +508,9 @@ public class ProfileFragment extends Fragment {
         tBirthdate.setText(temp.getBirthdate());
         tWeight.setText(temp.getWeight());
         tHeight.setText(temp.getHeight());
+        //profilePic.setImageBitmap(tempbit);
+        //imageUrl=temp.getImageUrl();
+        //profilePic.setImageResource(temp.getImageUrl());
         if (temp.getGender().equals("Hombre")){
             tGender.setSelection(0);
         }
